@@ -1,15 +1,18 @@
-import { LuHeadphones, LuImages, LuMonitorPlay } from 'react-icons/lu';
+import { LuGamepad2, LuHeadphones, LuImages, LuMonitorPlay } from 'react-icons/lu';
 import type { MaterialType } from '../types';
 
-const TABS: { id: MaterialType; label: string; icon: typeof LuHeadphones }[] = [
+export type SectionId = MaterialType | 'games';
+
+const TABS: { id: SectionId; label: string; icon: typeof LuHeadphones }[] = [
   { id: 'audio', label: 'Аудио', icon: LuHeadphones },
   { id: 'video', label: 'Видео', icon: LuMonitorPlay },
   { id: 'image', label: 'Суреттер', icon: LuImages },
+  { id: 'games', label: 'Ойындар', icon: LuGamepad2 },
 ];
 
-export default function Tabs({ active, onChange, counts }: { active: MaterialType; onChange: (t: MaterialType) => void; counts: Record<MaterialType, number> }) {
+export default function Tabs({ active, onChange, counts }: { active: SectionId; onChange: (t: SectionId) => void; counts: Record<MaterialType, number> }) {
   return (
-    <div role="tablist" aria-label="Бөлімдер" className="glass grid w-full grid-cols-3 gap-1 rounded-2xl p-1.5 sm:inline-grid sm:w-auto">
+    <div role="tablist" aria-label="Бөлімдер" className="glass grid w-full grid-cols-2 gap-1 min-[520px]:grid-cols-4 rounded-2xl p-1.5 sm:inline-grid sm:w-auto">
       {TABS.map(({ id, label, icon: Icon }) => {
         const on = id === active;
         return (
@@ -23,9 +26,11 @@ export default function Tabs({ active, onChange, counts }: { active: MaterialTyp
               on ? 'bg-gradient-to-br from-plum-500 to-plum-700 text-white shadow-lg shadow-plum-900/50' : 'text-slate-300 hover:bg-white/5 hover:text-white'
             }`}
           >
-            <Icon className={`hidden size-[18px] min-[420px]:block ${on ? 'text-gold-300' : ''}`} />
+            <Icon className={`hidden size-[18px] min-[360px]:block ${on ? 'text-gold-300' : ''}`} />
             <span>{label}</span>
-            <span className={`rounded-full px-1.5 text-[11px] leading-5 font-bold ${on ? 'bg-white/15 text-gold-200' : 'bg-white/[0.06] text-slate-400'}`}>{counts[id]}</span>
+            {id !== 'games' && (
+              <span className={`rounded-full px-1.5 text-[11px] leading-5 font-bold ${on ? 'bg-white/15 text-gold-200' : 'bg-white/[0.06] text-slate-400'}`}>{counts[id]}</span>
+            )}
           </button>
         );
       })}

@@ -22,12 +22,15 @@ import QrModal from './components/QrModal';
 import QrListModal from './components/QrListModal';
 import AudioSpotlight from './components/AudioSpotlight';
 import { clearLinkedMaterial, linkedMaterialId } from './lib/qr';
+import GamesHub from './components/games/GamesHub';
+import type { SectionId } from './components/Tabs';
 import Toasts, { type Toast, type ToastKind } from './components/Toasts';
 import type { MaterialActions } from './components/CardActions';
 
 type StatusFilter = 'all' | 'published' | 'draft';
 
-const SECTION_TITLE: Record<MaterialType, { title: string; sub: string }> = {
+const SECTION_TITLE: Record<SectionId, { title: string; sub: string }> = {
+  games: { title: 'Ойындар', sub: 'Табиғат құбылыстары мен музыкаға арналған ойындар' },
   audio: { title: 'Аудио', sub: 'Әуендерді сайттың ішінде тыңдаңыз' },
   video: { title: 'Видео', sub: 'Бейнежазбаларды толық экранда көріңіз' },
   image: { title: 'Суреттер', sub: 'Музыкалық суреттер галереясы' },
@@ -41,7 +44,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [tab, setTab] = useState<MaterialType>('audio');
+  const [tab, setTab] = useState<SectionId>('audio');
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
 
@@ -289,7 +292,7 @@ export default function App() {
               }}
               counts={counts}
             />
-            <div className="relative w-full lg:w-80">
+            <div className={`relative w-full lg:w-80 ${tab === 'games' ? 'hidden' : ''}`}>
               <LuSearch className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="search"
@@ -312,14 +315,16 @@ export default function App() {
               <h2 className="font-display text-xl font-semibold text-white sm:text-2xl">{section.title}</h2>
               <p className="mt-1 text-sm text-slate-400">{section.sub}</p>
             </div>
-            {!loading && visible.length > 0 && (
+            {tab !== 'games' && !loading && visible.length > 0 && (
               <p className="shrink-0 text-xs font-semibold text-slate-500">
                 {visible.length} материал · жаңалары алдымен
               </p>
             )}
           </div>
 
-          {loading ? (
+          {tab === 'games' ? (
+            <GamesHub />
+          ) : loading ? (
             <div className={tab === 'image' ? 'columns-1 gap-4 sm:columns-2 sm:gap-5 lg:columns-3' : 'grid gap-5 sm:grid-cols-2 lg:grid-cols-3'}>
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className={`glass mb-5 animate-pulse rounded-3xl ${tab === 'audio' ? 'h-56' : tab === 'video' ? 'h-72' : i % 2 ? 'h-64' : 'h-80'}`} />
@@ -336,7 +341,7 @@ export default function App() {
               )}
             </div>
           ) : visible.length === 0 ? (
-            <EmptyState type={tab} searching={Boolean(query.trim()) || status !== 'all'} teacher={teacher} onUpload={() => setUploadOpen(true)} />
+            <EmptyState type={tab as MaterialType} searching={Boolean(query.trim()) || status !== 'all'} teacher={teacher} onUpload={() => setUploadOpen(true)} />
           ) : tab === 'audio' ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {visible.map((m, i) => (
@@ -371,7 +376,7 @@ export default function App() {
         </div>
       </footer>
 
-      <UploadModal open={uploadOpen} initialType={tab} demo={demo} onClose={() => setUploadOpen(false)} onUpload={handleUpload} />
+      <UploadModal open={uploadOpen} initialType={tab === 'games' ? 'audio' : tab} demo={demo} onClose={() => setUploadOpen(false)} onUpload={handleUpload} />
       <EditModal material={editing} onClose={() => setEditing(null)} onSave={handleSave} />
       <ConfirmDialog material={deleting} onClose={() => setDeleting(null)} onConfirm={handleDelete} />
       <LoginModal open={loginOpen} demo={demo} demoLogin={demo ? DEMO_LOGIN : null} onClose={() => setLoginOpen(false)} onLogin={handleLogin} />
