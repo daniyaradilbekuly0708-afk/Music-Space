@@ -163,6 +163,23 @@
   }
 }
 
+.db-vibe {
+  animation: db-vibe 0.9s ease-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes db-vibe {
+  0% { transform: scaleY(1); stroke: #f7cf62; }
+  8% { transform: translateY(-2.5px); }
+  16% { transform: translateY(2.5px); }
+  24% { transform: translateY(-2px); }
+  32% { transform: translateY(2px); }
+  44% { transform: translateY(-1.2px); }
+  56% { transform: translateY(1.2px); }
+  72% { transform: translateY(-0.5px); }
+  100% { transform: translateY(0); stroke: #fdf3d0; }
+}
+
 .scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: rgb(255 255 255 / 0.15) transparent;

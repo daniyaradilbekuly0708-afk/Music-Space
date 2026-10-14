@@ -275,3 +275,54 @@ export function playZap(): void {
     /* ignore */
   }
 }
+
+const pluckCache = new Map<number, AudioBuffer>();
+
+/** Шертілген шектің дыбысы (Karplus–Strong әдісі) — домбыраға ұқсас. */
+export function playPluck(freq: number, gainValue = 0.9): void {
+  try {
+    const ac = audio();
+    let buf = pluckCache.get(freq);
+    if (!buf) {
+      const sr = ac.sampleRate;
+      const len = Math.floor(sr * 2.6);
+      buf = ac.createBuffer(1, len, sr);
+      const d = buf.getChannelData(0);
+      const period = Math.round(sr / freq);
+      const ring = new Float32Array(period);
+      for (let i = 0; i < period; i++) ring[i] = Math.random() * 2 - 1;
+      // шерту нүктесі: жоғары жиіліктерді сәл жұмсарту
+      for (let i = 1; i < period; i++) ring[i] = 0.6 * ring[i] + 0.4 * ring[i - 1];
+      let idx = 0;
+      const decay = freq < 200 ? 0.9965 : 0.9955;
+      for (let i = 0; i < len; i++) {
+        const next = (idx + 1) % period;
+        const v = ring[idx];
+        d[i] = v;
+        ring[idx] = decay * 0.5 * (v + ring[next]);
+        idx = next;
+      }
+      pluckCache.set(freq, buf);
+    }
+    const t = ac.currentTime;
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    // домбыра шанағының резонансы
+    const body = ac.createBiquadFilter();
+    body.type = 'peaking';
+    body.frequency.value = 280;
+    body.Q.value = 1.2;
+    body.gain.value = 6;
+    const lp = ac.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 3800;
+    const g = ac.createGain();
+    g.gain.setValueAtTime(gainValue, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 2.5);
+    src.connect(body).connect(lp).connect(g).connect(ac.destination);
+    src.start(t);
+    src.stop(t + 2.6);
+  } catch {
+    /* дыбыс қолжетімсіз */
+  }
+}
