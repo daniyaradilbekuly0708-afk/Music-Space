@@ -27,8 +27,9 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
           # Repository → Settings → Secrets and variables → Actions → Variables
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://bbwkzgadqgywbrzucvnz.supabase.co' }}
+          # Ашық (publishable) кілт — браузерге арналған, құпия емес. service_role кілтін мұнда ЖАЗБАҢЫЗ.
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || 'sb_publishable_fifleYzPTbZCqQhBY7GSgQ_CHL5gOT4' }}
           VITE_MAX_VIDEO_MB: ${{ vars.VITE_MAX_VIDEO_MB || '50' }}
       - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
