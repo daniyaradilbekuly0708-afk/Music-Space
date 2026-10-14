@@ -18,6 +18,9 @@ import UploadModal from './components/UploadModal';
 import EditModal from './components/EditModal';
 import LoginModal from './components/LoginModal';
 import ConfirmDialog from './components/ConfirmDialog';
+import QrModal from './components/QrModal';
+import AudioSpotlight from './components/AudioSpotlight';
+import { clearLinkedMaterial, linkedMaterialId } from './lib/qr';
 import Toasts, { type Toast, type ToastKind } from './components/Toasts';
 import type { MaterialActions } from './components/CardActions';
 
@@ -47,6 +50,9 @@ export default function App() {
   const [deleting, setDeleting] = useState<Material | null>(null);
   const [playingVideo, setPlayingVideo] = useState<Material | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [qrFor, setQrFor] = useState<Material | null>(null);
+  const [spotlight, setSpotlight] = useState<Material | null>(null);
+  const linkHandled = useRef(false);
 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastId = useRef(0);
@@ -86,6 +92,32 @@ export default function App() {
       });
     return () => unsub?.();
   }, [load]);
+
+  // QR код арқылы ашылса (?m=<id>): сол материалды бірден ойнату / ашу
+  useEffect(() => {
+    if (loading || linkHandled.current) return;
+    const id = linkedMaterialId();
+    if (!id) return;
+    linkHandled.current = true;
+    const m = materials.find((x) => x.id === id);
+    if (!m) {
+      clearLinkedMaterial();
+      toast('error', 'Бұл QR кодтағы материал табылмады немесе әзірге жарияланбаған.');
+      return;
+    }
+    setTab(m.type);
+    if (m.type === 'audio') setSpotlight(m);
+    else if (m.type === 'video') setPlayingVideo(m);
+    else {
+      const images = materials.filter((x) => x.type === 'image' && (teacher || x.is_published)).sort((a, b) => b.created_at.localeCompare(a.created_at));
+      setLightboxIndex(Math.max(0, images.findIndex((x) => x.id === m.id)));
+    }
+  }, [loading, materials, teacher, toast]);
+
+  const closeSpotlight = useCallback(() => {
+    setSpotlight(null);
+    clearLinkedMaterial();
+  }, []);
 
   // Мұғалім шыққанда сүзгіні қалпына келтіру
   useEffect(() => {
@@ -183,6 +215,7 @@ export default function App() {
     onEdit: setEditing,
     onDelete: setDeleting,
     onTogglePublish: togglePublish,
+    onQr: setQrFor,
   };
 
   const imageItems = tab === 'image' ? visible : [];
@@ -336,9 +369,22 @@ export default function App() {
       <EditModal material={editing} onClose={() => setEditing(null)} onSave={handleSave} />
       <ConfirmDialog material={deleting} onClose={() => setDeleting(null)} onConfirm={handleDelete} />
       <LoginModal open={loginOpen} demo={demo} demoLogin={demo ? DEMO_LOGIN : null} onClose={() => setLoginOpen(false)} onLogin={handleLogin} />
-      {playingVideo && <VideoPlayer m={playingVideo} onClose={() => setPlayingVideo(null)} />}
+      <QrModal material={qrFor} onClose={() => setQrFor(null)} />
+      {spotlight && <AudioSpotlight m={spotlight} onClose={closeSpotlight} />}
+      {playingVideo && (
+        <VideoPlayer
+          m={playingVideo}
+          onClose={() => {
+            setPlayingVideo(null);
+            clearLinkedMaterial();
+          }}
+        />
+      )}
       {lightboxIndex !== null && imageItems.length > 0 && (
-        <Lightbox items={imageItems} index={Math.min(lightboxIndex, imageItems.length - 1)} onIndex={setLightboxIndex} onClose={() => setLightboxIndex(null)} />
+        <Lightbox items={imageItems} index={Math.min(lightboxIndex, imageItems.length - 1)} onIndex={setLightboxIndex} onClose={() => {
+            setLightboxIndex(null);
+            clearLinkedMaterial();
+          }} />
       )}
       <Toasts toasts={toasts} dismiss={(id) => setToasts((t) => t.filter((x) => x.id !== id))} />
     </div>
