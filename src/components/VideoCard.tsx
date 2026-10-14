@@ -1,7 +1,7 @@
 import { LuPlay, LuFilm } from 'react-icons/lu';
 import type { Material } from '../types';
 import { formatBytes, formatDate } from '../lib/config';
-import CardActions, { DraftBadge, type MaterialActions } from './CardActions';
+import CardActions, { DraftBadge, QrButton, type MaterialActions } from './CardActions';
 
 interface Props {
   m: Material;
@@ -45,7 +45,10 @@ export default function VideoCard({ m, teacher, actions, index, onOpen }: Props)
         </div>
         <h3 className="line-clamp-2 font-display text-[15px] leading-snug font-semibold text-white">{m.title}</h3>
         {m.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-300/80">{m.description}</p>}
-        <p className="mt-auto pt-4 text-[11px] font-medium text-slate-500">{formatDate(m.created_at)}</p>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+          <span className="text-[11px] font-medium text-slate-500">{formatDate(m.created_at)}</span>
+          <QrButton m={m} actions={actions} />
+        </div>
       </div>
     </article>
   );

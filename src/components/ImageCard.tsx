@@ -1,6 +1,6 @@
 import { LuMaximize2 } from 'react-icons/lu';
 import type { Material } from '../types';
-import CardActions, { DraftBadge, type MaterialActions } from './CardActions';
+import CardActions, { DraftBadge, QrButton, type MaterialActions } from './CardActions';
 
 interface Props {
   m: Material;
@@ -28,6 +28,7 @@ export default function ImageCard({ m, teacher, actions, index, onOpen }: Props)
         <DraftBadge m={m} />
         <h3 className="mt-1 line-clamp-2 font-display text-sm leading-snug font-semibold text-white">{m.title}</h3>
         {m.description && <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-slate-400">{m.description}</p>}
+        <QrButton m={m} actions={actions} className="mt-3" />
       </figcaption>
     </figure>
   );

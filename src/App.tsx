@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { LuDatabase, LuFlaskConical, LuLayoutDashboard, LuRefreshCw, LuSearch, LuX } from 'react-icons/lu';
+import { LuDatabase, LuFlaskConical, LuLayoutDashboard, LuQrCode, LuRefreshCw, LuSearch, LuX } from 'react-icons/lu';
 import type { AppUser, Material, MaterialPatch, MaterialType, NewMaterialInput, Repo } from './types';
 import { getRepo } from './lib/repo';
 import { DEMO_LOGIN } from './lib/demoRepo';
@@ -19,6 +19,7 @@ import EditModal from './components/EditModal';
 import LoginModal from './components/LoginModal';
 import ConfirmDialog from './components/ConfirmDialog';
 import QrModal from './components/QrModal';
+import QrListModal from './components/QrListModal';
 import AudioSpotlight from './components/AudioSpotlight';
 import { clearLinkedMaterial, linkedMaterialId } from './lib/qr';
 import Toasts, { type Toast, type ToastKind } from './components/Toasts';
@@ -51,6 +52,7 @@ export default function App() {
   const [playingVideo, setPlayingVideo] = useState<Material | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [qrFor, setQrFor] = useState<Material | null>(null);
+  const [qrListOpen, setQrListOpen] = useState(false);
   const [spotlight, setSpotlight] = useState<Material | null>(null);
   const linkHandled = useRef(false);
 
@@ -254,6 +256,10 @@ export default function App() {
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">
+                <button type="button" className="btn-gold !px-3.5 !py-1.5 !text-xs" onClick={() => setQrListOpen(true)}>
+                  <LuQrCode className="size-3.5" />
+                  QR кодтар
+                </button>
                 {(
                   [
                     { id: 'all', label: 'Барлығы', n: stats.total },
@@ -369,6 +375,7 @@ export default function App() {
       <EditModal material={editing} onClose={() => setEditing(null)} onSave={handleSave} />
       <ConfirmDialog material={deleting} onClose={() => setDeleting(null)} onConfirm={handleDelete} />
       <LoginModal open={loginOpen} demo={demo} demoLogin={demo ? DEMO_LOGIN : null} onClose={() => setLoginOpen(false)} onLogin={handleLogin} />
+      <QrListModal open={qrListOpen} materials={materials} onClose={() => setQrListOpen(false)} onPick={(m) => setQrFor(m)} />
       <QrModal material={qrFor} onClose={() => setQrFor(null)} />
       {spotlight && <AudioSpotlight m={spotlight} onClose={closeSpotlight} />}
       {playingVideo && (

@@ -4,7 +4,7 @@ import type { Material } from '../types';
 import { formatBytes, formatDate, formatTime } from '../lib/config';
 import { announcePlay, onOtherPlay } from '../lib/media';
 import { Equalizer } from './SoundWave';
-import CardActions, { DraftBadge, type MaterialActions } from './CardActions';
+import CardActions, { DraftBadge, QrButton, type MaterialActions } from './CardActions';
 
 interface Props {
   m: Material;
@@ -156,11 +156,11 @@ export default function AudioCard({ m, teacher, actions, index }: Props) {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3 text-[11px] font-medium text-slate-500">
-          <span>{formatDate(m.created_at)}</span>
+        <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/[0.06] pt-3 text-[11px] font-medium text-slate-500">
           <span>
-            {m.mime_type.split('/')[1]?.replace('mpeg', 'mp3').toUpperCase()} · {formatBytes(m.size_bytes)}
+            {formatDate(m.created_at)} · {m.mime_type.split('/')[1]?.replace('mpeg', 'mp3').toUpperCase()} · {formatBytes(m.size_bytes)}
           </span>
+          <QrButton m={m} actions={actions} className="shrink-0" />
         </div>
         {error && <p className="mt-2 text-xs font-semibold text-rose-300">Аудионы ойнату мүмкін болмады. Файл бүлінген немесе браузер бұл форматты қолдамайды.</p>}
       </div>
