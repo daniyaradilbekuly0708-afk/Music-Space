@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { LuBrain, LuEar, LuPuzzle } from 'react-icons/lu';
+import { LuBrain, LuCloudLightning, LuEar, LuPuzzle } from 'react-icons/lu';
 import SoundGame from './SoundGame';
 import MatchGame from './MatchGame';
 import QuizGame from './QuizGame';
+import WeatherGame from './WeatherGame';
 import { MATCH_PAIRS, QUIZ, SOUND_ITEMS } from '../../lib/gamesData';
 
-type GameId = 'sound' | 'match' | 'quiz';
+type GameId = 'weather' | 'sound' | 'match' | 'quiz';
 
 const GAMES: { id: GameId; title: string; text: string; meta: string; icon: typeof LuEar }[] = [
+  { id: 'weather', title: 'Ауа райы саяхаты', text: 'Анимациялық ойын: аспаннан түскен ноталарды ұстап, әуен құра, найзағайдан қаш!', meta: '3 кезең · 60 секунд', icon: LuCloudLightning },
   { id: 'sound', title: 'Дыбысынан таны', text: 'Жаңбыр, найзағай, боран… Дыбысты тыңдап, қай құбылыс екенін тап.', meta: `${SOUND_ITEMS.length} дыбыс`, icon: LuEar },
   { id: 'match', title: 'Сәйкестендір', text: 'Табиғат құбылысын оны суреттейтін музыкалық шығармамен жұпта.', meta: `${MATCH_PAIRS.length} жұп`, icon: LuPuzzle },
   { id: 'quiz', title: 'Құбылыс викторинасы', text: 'Найзағай, қар, кемпірқосақ және композиторлар туралы сұрақтар.', meta: `${QUIZ.length} сұрақ`, icon: LuBrain },
@@ -17,12 +19,13 @@ export default function GamesHub() {
   const [game, setGame] = useState<GameId | null>(null);
   const back = () => setGame(null);
 
+  if (game === 'weather') return <WeatherGame onBack={back} />;
   if (game === 'sound') return <SoundGame onBack={back} />;
   if (game === 'match') return <MatchGame onBack={back} />;
   if (game === 'quiz') return <QuizGame onBack={back} />;
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-5 sm:grid-cols-2">
       {GAMES.map(({ id, title, text, meta, icon: Icon }, i) => (
         <button
           key={id}

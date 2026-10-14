@@ -225,3 +225,53 @@ export function stopNature(): void {
     current = null;
   }
 }
+
+/** Қысқа музыкалық нота (ұсталған нота үшін). */
+export function playTone(freq: number, length = 0.35): void {
+  try {
+    const ac = audio();
+    const t = ac.currentTime;
+    const o = ac.createOscillator();
+    const o2 = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = 'triangle';
+    o2.type = 'sine';
+    o.frequency.value = freq;
+    o2.frequency.value = freq * 2;
+    const g2 = ac.createGain();
+    g2.gain.value = 0.25;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.3, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + length);
+    o.connect(g);
+    o2.connect(g2).connect(g);
+    g.connect(ac.destination);
+    o.start(t);
+    o2.start(t);
+    o.stop(t + length + 0.05);
+    o2.stop(t + length + 0.05);
+  } catch {
+    /* дыбыс қолжетімсіз — ойын дыбыссыз жалғасады */
+  }
+}
+
+/** Найзағайға тигенде шығатын қысқа сартыл. */
+export function playZap(): void {
+  try {
+    const ac = audio();
+    const t = ac.currentTime;
+    const n = noiseSource(ac, 0.8, true);
+    const lp = ac.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(2500, t);
+    lp.frequency.exponentialRampToValueAtTime(120, t + 0.7);
+    const g = ac.createGain();
+    g.gain.setValueAtTime(1.4, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.75);
+    n.connect(lp).connect(g).connect(ac.destination);
+    n.start(t);
+    n.stop(t + 0.8);
+  } catch {
+    /* ignore */
+  }
+}
