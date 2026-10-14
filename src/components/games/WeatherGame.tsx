@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LuArrowLeft, LuHeart, LuPause, LuPlay } from 'react-icons/lu';
 import { playTone, playZap } from '../../lib/natureSounds';
+import { shouldIgnoreGameKey } from '../../lib/keys';
 
 /**
  * «Ауа райы саяхаты» — анимациялық ойын.
@@ -434,7 +435,7 @@ export default function WeatherGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (phaseRef.current !== 'playing') return;
+      if (phaseRef.current !== 'playing' || shouldIgnoreGameKey(e)) return;
       if (e.key === 'ArrowLeft' || e.key === 'a') {
         g.current.keys.left = true;
         e.preventDefault();

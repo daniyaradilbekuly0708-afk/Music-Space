@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { LuArrowLeft, LuCircleCheck, LuRotateCcw } from 'react-icons/lu';
 import { playPluck } from '../../lib/natureSounds';
+import { shouldIgnoreGameKey } from '../../lib/keys';
 
 /**
  * «Домбыра шерт» — екі шекті домбырада ойнау.
@@ -95,7 +96,7 @@ export default function DombraGame({ onBack }: { onBack: () => void }) {
   // Пернетақтадан ойнау
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.repeat || (e.target as HTMLElement)?.tagName === 'INPUT') return;
+      if (e.repeat || shouldIgnoreGameKey(e)) return;
       const k = e.key.toLowerCase();
       const t = KEY_TOP.indexOf(k);
       const b = KEY_BOTTOM.indexOf(k);
