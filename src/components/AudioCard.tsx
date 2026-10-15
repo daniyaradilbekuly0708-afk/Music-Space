@@ -73,7 +73,7 @@ export default function AudioCard({ m, teacher, actions, index }: Props) {
   return (
     <article
       className={`group glass relative flex animate-fade-up flex-col overflow-hidden rounded-3xl p-5 transition duration-300 hover:-translate-y-0.5 hover:border-white/15 ${
-        playing ? 'shadow-[0_0_0_1px_rgb(247_207_98/0.35),0_20px_60px_-20px_rgb(139_92_246/0.6)]' : 'shadow-xl shadow-black/20'
+        playing ? 'shadow-[0_0_0_1px_rgb(246_184_81/0.35),0_20px_60px_-20px_rgb(30_155_208/0.6)]' : 'shadow-xl shadow-black/20'
       }`}
       style={{ animationDelay: `${Math.min(index, 12) * 40}ms` }}
     >

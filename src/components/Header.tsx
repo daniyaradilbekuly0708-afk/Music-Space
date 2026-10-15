@@ -14,16 +14,19 @@ export default function Header({ mode, user, teacher, onLogin, onLogout, onUploa
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-ink-950/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-        <a href="#" className="group flex min-w-0 items-center gap-3" aria-label="MUSIC SPACE — басты бет">
+        <a href="#" className="group flex min-w-0 items-center gap-3" aria-label="ФИЗИКА + МУЗЫКА — басты бет">
           <span className="relative grid size-10 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-plum-500 to-ink-600 shadow-lg shadow-plum-900/40 ring-1 ring-white/15">
-            <svg viewBox="0 0 24 24" className="size-5 text-gold-300" fill="currentColor" aria-hidden="true">
-              <path d="M9 18.5a3 3 0 1 1-2-2.83V5.5l11-2.2v11.2a3 3 0 1 1-2-2.83V6.74L9 8.14Z" />
+            <svg viewBox="0 0 24 24" className="size-6 text-gold-300" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <ellipse cx="12" cy="12" rx="10" ry="4" opacity="0.75" />
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" opacity="0.75" />
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" opacity="0.75" />
+              <path d="M11 15.2a1.7 1.7 0 1 1-1.1-1.6V8.4l4.6-1v5.6a1.7 1.7 0 1 1-1.1-1.6V9l-2.4.5Z" fill="currentColor" stroke="none" />
             </svg>
             <span className="absolute -inset-1 -z-10 rounded-2xl bg-plum-500/30 opacity-0 blur-md transition group-hover:opacity-100" />
           </span>
           <span className="min-w-0 leading-tight">
-            <span className="block font-display text-[15px] font-bold tracking-[0.14em] text-white sm:text-base">MUSIC SPACE</span>
-            <span className="block truncate text-xs font-medium text-gold-300/90">Музыка әлемі</span>
+            <span className="block font-display text-[15px] font-bold tracking-[0.1em] text-white sm:text-base">ФИЗИКА <span className="text-gold-300">+</span> МУЗЫКА</span>
+            <span className="block truncate text-xs font-medium text-plum-300/90">Дыбыс пен құбылыс әлемі</span>
           </span>
         </a>
 

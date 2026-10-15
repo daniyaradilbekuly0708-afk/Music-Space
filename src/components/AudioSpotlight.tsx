@@ -91,7 +91,7 @@ export default function AudioSpotlight({ m, onClose }: { m: Material; onClose: (
       </div>
 
       <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-6 pb-12 text-center">
-        <p className="mb-3 font-display text-xs font-semibold tracking-[0.2em] text-gold-300 uppercase">MUSIC SPACE · Аудио</p>
+        <p className="mb-3 font-display text-xs font-semibold tracking-[0.2em] text-gold-300 uppercase">ФИЗИКА + МУЗЫКА · Аудио</p>
         <h1 className="font-display text-2xl leading-tight font-bold text-balance text-white sm:text-3xl">{m.title}</h1>
         {m.description && <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-slate-300/90">{m.description}</p>}
 

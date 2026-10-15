@@ -60,7 +60,7 @@ function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number
 
 /**
  * Кітапқа басып шығаруға арналған QR сурет (PNG data URL):
- * жоғарыда MUSIC SPACE, ортасында QR, астында материал атауы.
+ * жоғарыда ФИЗИКА + МУЗЫКА, ортасында QR, астында материал атауы.
  */
 export async function printableQr(m: Pick<Material, 'id' | 'title' | 'type'>): Promise<string> {
   const W = 900;
@@ -81,24 +81,24 @@ export async function printableQr(m: Pick<Material, 'id' | 'title' | 'type'>): P
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = '#10133a';
+  ctx.fillStyle = '#0b1b3f';
   ctx.font = '800 46px Unbounded, Manrope, system-ui, sans-serif';
-  ctx.fillText('MUSIC SPACE', W / 2, 78);
-  ctx.fillStyle = '#6d3fe0';
+  ctx.fillText('ФИЗИКА + МУЗЫКА', W / 2, 78);
+  ctx.fillStyle = '#1679ad';
   ctx.font = '600 24px Manrope, system-ui, sans-serif';
-  ctx.fillText('Музыка әлемі', W / 2, 112);
+  ctx.fillText('Дыбыс пен құбылыс әлемі', W / 2, 112);
 
   const qrCanvas = document.createElement('canvas');
   await QRCode.toCanvas(qrCanvas, materialLink(m), {
     width: QR,
     margin: 1,
     errorCorrectionLevel: 'M',
-    color: { dark: '#10133a', light: '#ffffff' },
+    color: { dark: '#0b1b3f', light: '#ffffff' },
   });
   ctx.drawImage(qrCanvas, (W - QR) / 2, 130, QR, QR);
 
   let y = 130 + QR + 64;
-  ctx.fillStyle = '#10133a';
+  ctx.fillStyle = '#0b1b3f';
   ctx.font = titleFont;
   for (const line of titleLines) {
     ctx.fillText(line, W / 2, y);

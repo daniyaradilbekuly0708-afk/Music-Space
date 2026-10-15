@@ -30,10 +30,10 @@ import type { MaterialActions } from './components/CardActions';
 type StatusFilter = 'all' | 'published' | 'draft';
 
 const SECTION_TITLE: Record<SectionId, { title: string; sub: string }> = {
-  games: { title: 'Ойындар', sub: 'Табиғат құбылыстары мен музыкаға арналған ойындар' },
+  games: { title: 'Ойындар мен тәжірибелер', sub: 'Физика, табиғат құбылыстары және музыка — ойнап үйрен' },
   audio: { title: 'Аудио', sub: 'Әуендерді сайттың ішінде тыңдаңыз' },
   video: { title: 'Видео', sub: 'Бейнежазбаларды толық экранда көріңіз' },
-  image: { title: 'Суреттер', sub: 'Музыкалық суреттер галереясы' },
+  image: { title: 'Суреттер', sub: 'Құбылыстар мен аспаптар галереясы' },
 };
 
 export default function App() {
@@ -367,7 +367,7 @@ export default function App() {
       <footer className="border-t border-white/[0.06] bg-ink-950/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-slate-500 sm:flex-row sm:px-6">
           <p>
-            © {new Date().getFullYear()} <span className="font-display font-semibold tracking-wider text-slate-300">MUSIC SPACE</span> — Музыка әлемі
+            © {new Date().getFullYear()} <span className="font-display font-semibold tracking-wider text-slate-300">ФИЗИКА + МУЗЫКА</span> — Дыбыс пен құбылыс әлемі
           </p>
           <p className="inline-flex items-center gap-1.5">
             {demo ? <LuFlaskConical className="size-3.5" /> : <LuDatabase className="size-3.5" />}

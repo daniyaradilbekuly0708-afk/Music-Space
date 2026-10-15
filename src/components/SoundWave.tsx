@@ -31,13 +31,13 @@ export function WaveLine() {
           <svg key={k} viewBox="0 0 1200 80" preserveAspectRatio="none" className="h-20 w-1/2">
             <defs>
               <linearGradient id={`wg${k}`} x1="0" x2="1">
-                <stop offset="0" stopColor="#b394ff" />
-                <stop offset="0.5" stopColor="#f7cf62" />
-                <stop offset="1" stopColor="#b394ff" />
+                <stop offset="0" stopColor="#5cc6e6" />
+                <stop offset="0.5" stopColor="#f6b851" />
+                <stop offset="1" stopColor="#5cc6e6" />
               </linearGradient>
             </defs>
             <path d={path} fill="none" stroke={`url(#wg${k})`} strokeWidth="2" strokeLinejoin="round" opacity="0.9" />
-            <path d={path} fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.35" transform="translate(0,8)" />
+            <path d={path} fill="none" stroke="#2bb3a3" strokeWidth="1" opacity="0.35" transform="translate(0,8)" />
           </svg>
         ))}
       </div>
