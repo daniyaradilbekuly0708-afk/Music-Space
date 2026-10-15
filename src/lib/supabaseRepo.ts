@@ -40,7 +40,7 @@ export function createSupabaseRepo(url: string, anonKey: string): Repo {
   const toMaterial = (r: MaterialRow): Material => ({
     id: r.id,
     type: r.type,
-    subject: r.subject === 'physics' ? 'physics' : 'music',
+    subject: r.subject === 'physics' || r.subject === 'english' ? r.subject : 'music',
     title: r.title,
     description: r.description ?? '',
     file_path: r.file_path,
@@ -233,6 +233,9 @@ function storageErrorMessage(status: number, body: string): string {
 function dbErrorMessage(raw: string): string {
   if (/subject/i.test(raw) && /column|schema cache/i.test(raw)) {
     return 'Дерекқорда «бөлім» (subject) бағаны әлі жоқ. Supabase → SQL Editor-де supabase/add_subject.sql файлын бір рет іске қосыңыз.';
+  }
+  if (/subject_check|check constraint/i.test(raw)) {
+    return 'Дерекқор «Ағылшын тілі» бөлімін әлі танымайды. Supabase → SQL Editor-де supabase/add_english.sql файлын бір рет іске қосыңыз.';
   }
   if (/row-level security/i.test(raw)) return 'Рұқсат жоқ: бұл әрекетті тек мұғалім орындай алады.';
   if (/relation .*materials.* does not exist|could not find the table/i.test(raw)) {

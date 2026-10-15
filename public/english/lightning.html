@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lightning Challenge | Physics × English</title>
+<style>
+:root{--white:#f8fcff;--deep:#1d315d;--blue:#bddbff;--glass:rgba(247,252,255,.14)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:ui-rounded,"Trebuchet MS",Arial,sans-serif;color:var(--white);background:#17274b}
+body{overflow-x:hidden}.sky{position:fixed;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 110%,#7d98bb 0%,#425e91 40%,#273c72 76%,#18284d 100%);z-index:0}
+.sky:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(9,25,50,.3));pointer-events:none}
+.cloud{position:absolute;width:330px;height:90px;opacity:.65;border-radius:55%;background:radial-gradient(ellipse at center,#bdcce6 0%,#7484b2 48%,transparent 75%);filter:blur(20px);animation:cloud 19s ease-in-out infinite alternate}.cloud.one{top:13%;left:-5%}.cloud.two{top:18%;right:-7%;width:430px;animation-duration:24s;animation-direction:alternate-reverse}.cloud.three{top:48%;left:35%;opacity:.27;animation-duration:16s}
+@keyframes cloud{from{transform:translateX(-38px)}to{transform:translateX(60px)}}
+#rainCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.bolt{position:absolute;right:12%;top:4%;height:min(49vh,440px);width:26%;opacity:.04;filter:drop-shadow(0 0 18px #eef7ff);pointer-events:none;transform:rotate(8deg)}
+.bolt.flash{animation:boltf 1s ease-out}@keyframes boltf{0%,100%{opacity:.04}6%{opacity:1}12%{opacity:.08}20%{opacity:1}28%{opacity:.12}42%{opacity:.78}60%{opacity:.08}}
+#flash{position:absolute;inset:0;background:#f8fcff;opacity:0;pointer-events:none}#flash.hit{animation:flash .9s ease-out}@keyframes flash{0%,100%{opacity:0}5%{opacity:.98}12%{opacity:.1}20%{opacity:.75}30%{opacity:.14}42%{opacity:.46}56%{opacity:0}}#sky.lit{animation:skyflash .9s ease-out}@keyframes skyflash{0%,100%{filter:brightness(1)}6%{filter:brightness(1.95)}15%{filter:brightness(1.15)}24%{filter:brightness(1.7)}36%{filter:brightness(1.08)}50%{filter:brightness(1.35)}70%{filter:brightness(1)}}
+.land{position:absolute;bottom:0;left:0;width:100%;height:23%;background:linear-gradient(155deg,transparent 25%,#1c2e52 26% 65%,transparent 66%),linear-gradient(25deg,transparent 30%,#20385f 31% 70%,transparent 71%),linear-gradient(0deg,#10213b,#213a65);clip-path:polygon(0 64%,13% 48%,29% 73%,43% 43%,59% 73%,75% 47%,88% 66%,100% 52%,100% 100%,0 100%);opacity:.9}
+.main{position:relative;z-index:2;max-width:1100px;min-height:100dvh;margin:auto;padding:22px 22px 32px;display:flex;flex-direction:column;gap:14px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.015em;font-size:clamp(21px,3vw,32px);text-shadow:0 4px 15px #223556}.brand .em{font-size:38px}.headbuttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff;outline-offset:3px}.smallbtn{border:1px solid rgba(255,255,255,.4);border-radius:99px;padding:10px 17px;font-size:14px;color:#f6fbff;background:rgba(250,253,255,.14);backdrop-filter:blur(9px);transition:.2s}.smallbtn:hover{background:rgba(250,253,255,.24)}
+.panel{border:1px solid rgba(243,251,255,.27);background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(230,240,255,.09));box-shadow:0 16px 40px rgba(6,22,51,.18);backdrop-filter:blur(16px);border-radius:26px}
+.intro{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.intro h1{font-size:clamp(20px,2.6vw,30px);margin:0 0 5px}.intro p{margin:0;color:#ecf5ff;line-height:1.5;font-size:15px}.startbtn{background:linear-gradient(120deg,#fff,#d2ebff);border:0;border-radius:100px;padding:13px 23px;color:#254974;font-weight:800;box-shadow:0 8px 22px #0c2c5950}.startbtn:hover{filter:brightness(1.07)}
+.nav{display:flex;gap:8px;flex-wrap:wrap}.nav span{padding:9px 16px;border-radius:99px;background:#edf7ff16;border:1px solid #eef6ff3d;font-size:14px}.nav span.active{background:#eef7ff;color:#2b4d77;font-weight:800}.nav span.done{background:#9de5d73b}
+.task{padding:24px;max-width:900px;width:100%;margin:0 auto}.kicker{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:#dfecff;margin-bottom:12px}.prompt{font-size:clamp(22px,3vw,31px);font-weight:800;line-height:1.3;margin:0 0 8px}.instruction{color:#e4f1ff;font-size:15px;margin:0 0 20px;line-height:1.5}.question-counter{margin:0 0 12px;color:#dbeaff;font-size:13px}
+.answers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.answer{height:114px;position:relative;border-radius:19px;border:1px solid #fff8;background:linear-gradient(145deg,#ffffff,#deedfc);color:#315782;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;padding:12px;box-shadow:0 10px 20px #091d4533;transition:transform .18s,filter .18s,opacity .35s;font-size:clamp(16px,2vw,21px);font-weight:800;overflow:hidden}.answer:before{content:'⚡';color:#89b5e54a;font-size:35px;position:absolute;top:3px;right:8px;pointer-events:none}.answer:hover{transform:translateY(-5px);filter:brightness(1.06)}.answer.correct{animation:disappear .45s ease forwards;pointer-events:none}.answer.incorrect{animation:shake .42s ease;background:linear-gradient(135deg,#fff,#ffe2e4)}.answer:disabled{cursor:default}.answer:disabled:hover{transform:none}
+@keyframes disappear{0%{opacity:1;transform:scale(1)}45%{opacity:.85;transform:scale(1.08)}100%{opacity:0;transform:scale(.45)}}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+.status{min-height:48px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:18px;font-size:15px}.feedback{color:#e9f8ff;line-height:1.4}.next{display:none;min-width:155px}.end{text-align:center;max-width:560px;margin:auto;padding:38px 27px}.end h2{font-size:40px;margin:0 0 15px}.end p{font-size:18px;line-height:1.5;color:#e6f2ff;margin:0 0 24px}.hidden{display:none!important}.badge{border-radius:999px;background:#b4d6f829;padding:5px 10px;border:1px solid #ffffff32;font-size:12px}
+@media(max-width:680px){.main{padding:16px 12px 22px}.task{padding:17px 14px}.answers{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{height:90px;font-size:17px}.intro{padding:17px}.brand{font-size:21px}.header{align-items:flex-start}.task .prompt{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="sky" id="sky" aria-hidden="true"><div class="cloud one"></div><div class="cloud two"></div><div class="cloud three"></div><canvas id="rainCanvas"></canvas><svg class="bolt" id="bolt" viewBox="0 0 160 350" preserveAspectRatio="xMidYMid meet"><path d="M94 8 L42 132 L81 132 L35 260 L121 153 L86 153 L132 8" fill="#e9f8ff" stroke="#faffff" stroke-width="5" stroke-linejoin="round"/></svg><div id="flash"></div><div class="land"></div></div>
+<main class="main">
+<header class="header"><div class="brand"><span class="em">⛈️</span><span>Lightning Challenge <span class="badge">Physics × English</span></span></div><div class="headbuttons"><button class="smallbtn" id="soundBtn" type="button">🔇 Дыбысты қосу</button><button class="smallbtn" id="restartBtn" type="button">↻ Қайта ойнау</button></div></header>
+<section class="panel intro" id="intro"><div><h1>Welcome to the Storm!</h1><p>3 кезең: ауа райы сөздері • сөйлемді толықтыру • аударма.<br>Жауаптар бірден шығады. Дұрыс жауапта найзағай күркірейді!</p></div><button type="button" class="startbtn" id="startBtn">▶ Ойынды бастау</button></section>
+<nav class="nav hidden" id="nav"><span id="tab0">1 · Storm Words</span><span id="tab1">2 · Complete</span><span id="tab2">3 · Translate</span></nav>
+<section class="panel task hidden" id="task"><div class="kicker" id="kicker">ROUND 1</div><h2 class="prompt" id="prompt"></h2><p class="instruction" id="instruction"></p><p class="question-counter hidden" id="counter"></p><div class="answers" id="answers"></div><div class="status"><div class="feedback" id="feedback" aria-live="polite"></div><button type="button" class="startbtn next" id="nextBtn">Next →</button></div></section>
+<section class="panel end hidden" id="end"><h2>Excellent! ⚡</h2><p>You completed the Lightning Challenge!<br>Great job learning English with Physics.</p><button type="button" class="startbtn" id="endRestart">↻ Play Again</button></section>
+</main>
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const stages=[
+ {title:'Catch the storm words!',hint:'Найзағайлы ауа райына қатысты 4 ағылшын сөзін таңдаңыз.',options:[['lightning',1],['thunder',1],['rain',1],['cloud',1],['sand',0],['beach',0],['flower',0],['desert',0]],note:'Lightning — электрлік разряд, thunder — оның күркіреуі.'},
+ {title:'Lightning is a type of _____.',hint:'Сөйлемге сәйкес келетін бір дұрыс сөзді таңдаңыз.',options:[['electricity',1],['music',0],['flower',0],['wood',0]],note:'Lightning is a natural electric discharge.'},
+ {title:'Choose the correct translation!',hint:'Берілген қазақша сөздің ағылшынша аудармасын табыңыз.',translation:[
+ {word:'Найзағай',options:[['lightning',1],['rain',0],['wind',0],['cloud',0]],note:'Найзағай — lightning.'},
+ {word:'Күн күркіреуі',options:[['thunder',1],['sunshine',0],['snow',0],['fog',0]],note:'Күн күркіреуі — thunder.'},
+ {word:'Электр тогы',options:[['electric current',1],['heavy rain',0],['strong wind',0],['warm weather',0]],note:'Электр тогы — electric current.'}
+ ]}
+ ];
+ let stage=0,translationIndex=0,found=0,total=0,locked=false,started=false,audio=null,rainSource=null,rainGain=null,soundOn=false;
+ let audioPermissionRequested=false;
+ const canvas=$('rainCanvas'),ctx=canvas.getContext('2d');let drops=[],W=0,H=0,last=0;
+ function resize(){W=canvas.width=innerWidth*devicePixelRatio;H=canvas.height=innerHeight*devicePixelRatio;drops=Array.from({length:Math.min(100,Math.floor(innerWidth/13))},()=>({x:Math.random()*W,y:Math.random()*H,v:(2+Math.random()*2.4)*devicePixelRatio,l:(12+Math.random()*14)*devicePixelRatio}));}
+ function renderRain(t){const dt=Math.min(3,(t-last||16)/16.7);last=t;ctx.clearRect(0,0,W,H);ctx.strokeStyle='rgba(224,239,255,.40)';ctx.lineWidth=1.1*devicePixelRatio;ctx.beginPath();for(const d of drops){ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-3*devicePixelRatio,d.y+d.l);d.y+=d.v*dt*2.0;d.x-=.9*devicePixelRatio*dt;if(d.y>H+20){d.y=-25;d.x=Math.random()*W}}ctx.stroke();requestAnimationFrame(renderRain);}
+ resize();addEventListener('resize',resize);requestAnimationFrame(renderRain);
+ function audioReady(){if(!audio){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;audio=new AC();}if(audio.state==='suspended')audio.resume().catch(()=>{});return true;}
+ function noiseBuffer(seconds){const sr=audio.sampleRate;const buf=audio.createBuffer(1,Math.floor(sr*seconds),sr);const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;return buf;}
+ function beginRainSound(){if(!audioReady()||rainSource)return;rainSource=audio.createBufferSource();rainSource.buffer=noiseBuffer(3);rainSource.loop=true;const filter=audio.createBiquadFilter();filter.type='lowpass';filter.frequency.value=950;rainGain=audio.createGain();rainGain.gain.setValueAtTime(0,audio.currentTime);rainGain.gain.linearRampToValueAtTime(.07,audio.currentTime+.9);rainSource.connect(filter).connect(rainGain).connect(audio.destination);rainSource.start();}
+ function stopRainSound(){if(!audio||!rainSource)return;const source=rainSource;const gain=rainGain;gain.gain.cancelScheduledValues(audio.currentTime);gain.gain.setTargetAtTime(0,audio.currentTime,.08);setTimeout(()=>{try{source.stop();source.disconnect()}catch(e){}},450);rainSource=null;rainGain=null;}
+ function thunder(){if(!soundOn||!audioReady())return;const now=audio.currentTime;const src=audio.createBufferSource();src.buffer=noiseBuffer(2.3);const lp=audio.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(750,now);lp.frequency.exponentialRampToValueAtTime(105,now+2.1);const gain=audio.createGain();gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.65,now+.065);gain.gain.exponentialRampToValueAtTime(.2,now+.35);gain.gain.exponentialRampToValueAtTime(.001,now+2.3);src.connect(lp).connect(gain).connect(audio.destination);src.start(now);src.stop(now+2.31);}
+ function setSound(on){soundOn=on;if(on){audioPermissionRequested=true;beginRainSound();$('soundBtn').textContent='🔊 Дыбысты өшіру';}else{stopRainSound();$('soundBtn').textContent='🔇 Дыбысты қосу';}}
+ $('soundBtn').onclick=()=>setSound(!soundOn);
+ function flash(){const bolt=$('bolt'),f=$('flash'),sky=$('sky');bolt.classList.remove('flash');f.classList.remove('hit');sky.classList.remove('lit');void bolt.offsetWidth;bolt.classList.add('flash');f.classList.add('hit');sky.classList.add('lit');setTimeout(()=>sky.classList.remove('lit'),920);}
+ function shuffle(a){const b=a.map(v=>v.slice());for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+ function start(){started=true;stage=0;translationIndex=0;$('intro').classList.add('hidden');$('end').classList.add('hidden');$('nav').classList.remove('hidden');$('task').classList.remove('hidden');setSound(true);drawStage();}
+ function reset(){stage=0;translationIndex=0;if(!started){start();return;}$('end').classList.add('hidden');$('nav').classList.remove('hidden');$('task').classList.remove('hidden');drawStage();}
+ function drawStage(){locked=false;found=0;$('kicker').textContent=`ROUND ${stage+1} / 3`;$('nextBtn').style.display='none';$('feedback').textContent='';for(let i=0;i<3;i++){const tab=$('tab'+i);tab.className=i===stage?'active':i<stage?'done':'';}
+ const s=stages[stage];let opts=s.options;$('prompt').textContent=s.title;$('instruction').textContent=s.hint;
+ if(stage===2){const q=s.translation[translationIndex];opts=q.options;$('prompt').textContent=`«${q.word}» — ?`;$('counter').classList.remove('hidden');$('counter').textContent=`Translation ${translationIndex+1} / ${s.translation.length}`;}else{$('counter').classList.add('hidden');}
+ total=opts.filter(o=>o[1]).length;
+ const container=$('answers');container.replaceChildren();for(const [word,correct] of shuffle(opts)){const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=word;b.addEventListener('click',()=>pick(b,!!correct));container.appendChild(b);}}
+ function pick(el,correct){if(locked||el.disabled)return;if(!correct){el.classList.remove('incorrect');void el.offsetWidth;el.classList.add('incorrect');$('feedback').textContent='Try again! Тағы ойланып көріңіз.';return;}
+ el.disabled=true;el.classList.add('correct');flash();thunder();found++;$('feedback').textContent='Correct! ⚡';
+ if(found>=total){locked=true;const note=stage===2?stages[2].translation[translationIndex].note:stages[stage].note;$('feedback').textContent='✅ '+note;$('nextBtn').textContent=stage===2&&translationIndex===2?'Finish →':'Next →';$('nextBtn').style.display='inline-block';}}
+ function next(){if(!locked)return;if(stage===2){if(translationIndex<2){translationIndex++;drawStage();}else{showEnd();}}else{stage++;drawStage();}}
+ function showEnd(){$('task').classList.add('hidden');$('nav').classList.add('hidden');$('end').classList.remove('hidden');}
+ $('startBtn').onclick=start;$('restartBtn').onclick=reset;$('endRestart').onclick=reset;$('nextBtn').onclick=next;
+})();
+</script>
+</body>
+</html>

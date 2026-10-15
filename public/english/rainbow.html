@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rainbow Color Lab • Physics × English</title>
+<style>
+:root{--ink:#354b74;--sub:#6880a4;--glass:rgba(255,255,255,.70);--line:rgba(255,255,255,.88);--accent:#6974d9}
+*{box-sizing:border-box}
+html{min-height:100%;background:#c7dcfa}
+body{margin:0;min-height:100vh;font-family:ui-rounded,"Nunito","Segoe UI",Arial,sans-serif;color:var(--ink);overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid #6a80e0;outline-offset:3px}
+.backdrop{position:fixed;inset:0;overflow:hidden;z-index:-2;background:radial-gradient(ellipse at 17% 17%,rgba(255,248,234,.97),transparent 40%),radial-gradient(ellipse at 84% 32%,rgba(214,195,244,.57),transparent 36%),linear-gradient(135deg,#b8dbf3 0%,#d1eaff 39%,#e3e1fa 72%,#f5e4f0 100%)}
+.cloud{position:absolute;border-radius:100px;background:rgba(255,255,255,.55);box-shadow:0 15px 40px rgba(124,161,197,.12);filter:blur(1.8px);animation:cloudfloat 14s ease-in-out infinite alternate}
+.cloud:before,.cloud:after{content:"";position:absolute;bottom:25%;background:inherit;border-radius:50%}.cloud:before{left:13%;width:42%;height:150%}.cloud:after{left:43%;width:40%;height:185%}.c1{width:240px;height:65px;top:18%;left:-5%}.c2{width:350px;height:80px;top:13%;right:-8%;animation-delay:-5s}.c3{width:190px;height:49px;bottom:13%;left:7%;opacity:.7;animation-delay:-7s}
+@keyframes cloudfloat{to{transform:translateX(43px) translateY(-12px)}}
+.twinkle{position:absolute;color:rgba(255,255,255,.72);animation:shimmer 3s ease-in-out infinite alternate;pointer-events:none}
+@keyframes shimmer{to{opacity:.15;transform:scale(.65) rotate(30deg)}}
+.shell{max-width:1350px;margin:auto;min-height:100vh;padding:18px clamp(13px,2.6vw,34px) 34px;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;position:relative;z-index:6;margin-bottom:15px}
+.brand{display:flex;gap:13px;align-items:center}.mark{display:grid;place-items:center;width:51px;height:51px;font-size:30px;background:rgba(255,255,255,.65);border:1px solid #fff;border-radius:17px;box-shadow:0 8px 20px rgba(93,132,190,.12)}
+.brand h1{font-size:clamp(21px,2.6vw,31px);line-height:1.08;margin:0;color:#354b78;letter-spacing:.1px}.brand small{display:block;font-size:12px;letter-spacing:1.7px;color:#697ca1;font-weight:800;margin-top:5px}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.toolbtn{border:1px solid rgba(255,255,255,.95);border-radius:15px;background:rgba(255,255,255,.67);color:#455c84;padding:11px 14px;box-shadow:0 7px 16px rgba(112,148,189,.1);font-weight:800;font-size:13px;transition:transform .2s,background .2s}.toolbtn:hover{transform:translateY(-2px);background:#fff}
+.scene-card{position:relative;background:linear-gradient(145deg,rgba(255,255,255,.52),rgba(255,255,255,.27));border:1px solid rgba(255,255,255,.83);border-radius:30px;box-shadow:0 24px 55px rgba(85,129,178,.12);overflow:hidden;min-height:305px;height:clamp(305px,39vh,415px);isolation:isolate}
+.scene-card:before{content:"";position:absolute;width:370px;height:370px;border-radius:50%;background:rgba(255,255,255,.23);right:-100px;top:-180px;z-index:-1}
+.scene-card:after{content:"";position:absolute;inset:auto -10% -48px -10%;height:105px;border-radius:50% 50% 0 0;background:rgba(255,255,255,.35);z-index:-1}
+.scene-head{position:absolute;left:26px;top:23px;z-index:2}.pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:2px;font-weight:900;color:#7581a7;text-transform:uppercase;background:rgba(255,255,255,.75);border:1px solid #fff;border-radius:99px;padding:9px 12px}.scene-head p{font-size:15px;color:#6880a4;font-weight:700;margin:11px 0 0}
+.scene-svg{position:absolute;left:0;bottom:0;width:100%;height:92%;overflow:visible}
+#whiteBeam{animation:beamglow 2.6s ease-in-out infinite alternate}
+@keyframes beamglow{to{opacity:.7;filter:drop-shadow(0 0 10px #fff)}}
+.prism-group{filter:drop-shadow(0 9px 13px rgba(89,131,170,.18));transform-origin:452px 228px;transition:filter .2s}
+.scene-card.pulse .prism-group{animation:prismpulse .9s ease-out}
+@keyframes prismpulse{0%,100%{filter:drop-shadow(0 9px 13px rgba(89,131,170,.18))}20%,45%{filter:drop-shadow(0 0 28px #fff)}}
+.spectrum-path{opacity:0;stroke-dasharray:720;stroke-dashoffset:720;transition:none;filter:drop-shadow(0 0 5px rgba(255,255,255,.38))}
+.spectrum-path.revealed{opacity:1;animation:drawcolor 1.15s ease-out forwards}
+@keyframes drawcolor{to{stroke-dashoffset:0}}
+.sun-halo{animation:sunpulse 5s ease-in-out infinite alternate;transform-origin:90px 145px}
+@keyframes sunpulse{to{opacity:.5;transform:scale(1.12)}}
+.scene-hint{position:absolute;right:22px;bottom:20px;font-size:12px;color:#64799f;font-weight:800;background:rgba(255,255,255,.75);border:1px solid #fff;padding:10px 13px;border-radius:99px;z-index:2}
+.progress{display:flex;gap:8px;align-items:center;justify-content:center;margin:16px 0}.step{display:flex;gap:8px;align-items:center;border:1px solid #fff;border-radius:20px;background:rgba(255,255,255,.5);padding:10px 13px;font-size:13px;font-weight:800;color:#8793b0;transition:background .2s,color .2s}.step .n{width:23px;height:23px;border-radius:50%;background:rgba(169,177,215,.24);display:grid;place-items:center}.step.active{color:#5366b6;background:rgba(255,255,255,.95);box-shadow:0 8px 17px rgba(103,115,168,.1)}.step.active .n{color:white;background:#7689d7}.step.done .n{background:#99c9ae;color:#fff}
+.task-card{position:relative;max-width:980px;margin:0 auto;border:1px solid var(--line);border-radius:27px;padding:21px clamp(16px,3vw,30px) 23px;background:rgba(255,255,255,.75);backdrop-filter:blur(9px);box-shadow:0 14px 40px rgba(85,129,178,.10);min-height:224px}
+.task-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.eyebrow{color:#7387b1;letter-spacing:1.5px;font-weight:900;text-transform:uppercase;font-size:11px}.small-note{color:#8ba1bf;font-size:12px;font-weight:800}
+#prompt{font-size:clamp(21px,2.75vw,29px);margin:9px 0 7px;line-height:1.25;color:#395181}#instruction{color:#6c809f;font-size:14px;line-height:1.5;margin:0 0 17px;font-weight:600}
+.options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.answer{min-height:69px;padding:11px;border:1.7px solid #fff;border-radius:17px;background:linear-gradient(135deg,#fff,#f1f7ff);font-size:clamp(15px,1.6vw,21px);font-weight:850;color:#4c6288;box-shadow:0 7px 13px rgba(112,155,195,.10);transition:transform .17s,box-shadow .17s,background .17s;position:relative;overflow:hidden}.answer:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 11px 20px rgba(112,155,195,.2)}.answer:disabled{cursor:default}.answer.good{animation:correctpop .55s ease-out forwards;background:#e4f8ec;color:#377258;border-color:#bde6ce}.answer.bad{animation:wrongshake .45s ease;background:#fff0ee;border-color:#ffc4bd}.answer.good:after{content:"✓";position:absolute;right:11px;top:7px;color:#3ba16a;font-weight:900}
+@keyframes correctpop{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes wrongshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}55%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
+.bottomline{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:16px;min-height:43px}.feedback{font-size:13px;font-weight:800;color:#7184a8}.nextbtn{background:linear-gradient(135deg,#6a7cce,#9082de);border:none;border-radius:15px;color:#fff;font-size:15px;font-weight:850;padding:12px 21px;box-shadow:0 9px 18px rgba(116,121,203,.21);transition:transform .18s}.nextbtn:hover{transform:translateY(-2px)}.nextbtn.hidden{display:none}
+#overlay{position:fixed;inset:0;background:rgba(95,128,178,.21);z-index:25;display:grid;place-items:center;padding:20px;backdrop-filter:blur(9px)}#overlay.hidden{display:none}.welcome{width:min(525px,96vw);text-align:center;background:rgba(255,255,255,.93);border:1.5px solid #fff;border-radius:30px;padding:32px clamp(20px,4vw,39px);box-shadow:0 27px 70px rgba(85,120,165,.2)}.bigicon{font-size:61px;line-height:1.3}.welcome h2{color:#405788;font-size:clamp(25px,3.5vw,34px);margin:8px 0}.welcome p{color:#6b80a5;line-height:1.65;font-size:16px;margin:10px 0 20px}.welcome .nextbtn{font-size:18px;padding:14px 28px}
+#finish{display:none;position:absolute;left:17px;bottom:15px;width:min(355px,44%);background:rgba(255,255,255,.89);border:1px solid #fff;border-radius:23px;box-shadow:0 16px 30px rgba(105,129,172,.16);z-index:10;align-items:center;justify-content:center;text-align:center;padding:15px}.finish-inner{max-width:100%}.finish-inner h2{font-size:clamp(23px,2.5vw,29px);color:#5666ae;margin:4px 0}.finish-inner p{font-size:13px;line-height:1.45;color:#657ba4;margin:0 0 13px}.finish-inner .nextbtn{font-size:13px;padding:10px 16px}
+#voiceStatus{font-size:11px;color:#7e95b6;padding:0 5px;line-height:1.4;text-align:right}
+@media(max-width:760px){.shell{padding:12px 11px 24px}.mark{width:41px;height:41px;font-size:23px;border-radius:14px}.brand h1{font-size:20px}.brand small{letter-spacing:.6px;font-size:10px}.toolbar{gap:5px}.toolbtn{padding:9px;font-size:11px}.scene-card{border-radius:24px;height:290px;min-height:290px}#finish{left:7px;bottom:7px;width:min(240px,50%);padding:9px;border-radius:15px}.finish-inner h2{font-size:18px}.finish-inner p{font-size:11px;margin-bottom:7px}.finish-inner .nextbtn{padding:7px 9px;font-size:11px}.scene-head{left:14px;top:12px}.scene-head p{font-size:12px;margin-top:7px;max-width:170px}.scene-hint{right:8px;bottom:7px;font-size:10px;padding:7px}.progress{gap:4px;margin:12px 0}.step{padding:7px 8px;font-size:10px;gap:4px;border-radius:13px}.step .n{width:17px;height:17px}.task-card{border-radius:22px;padding:17px 14px}.options{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{min-height:62px;font-size:17px;border-radius:14px}.bottomline{align-items:flex-start}.nextbtn{padding:11px 14px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.cloud,.twinkle,.sun-halo,#whiteBeam{animation:none}}
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><span class="twinkle" style="top:24%;left:30%">✦</span><span class="twinkle" style="top:12%;right:24%;animation-delay:-2s">✦</span><span class="twinkle" style="bottom:24%;right:12%;animation-delay:-1s">✧</span></div>
+<div class="shell">
+<header>
+  <div class="brand"><div class="mark">🌈</div><div><h1>Rainbow Color Lab</h1><small>PHYSICS × ENGLISH</small></div></div>
+  <div class="toolbar"><button class="toolbtn" id="musicBtn" title="Фондық әуен">♫ Әуен: қосулы</button><button class="toolbtn" id="speechBtn" title="Ағылшынша айтылуы">🔊 Дауыс: қосулы</button><button class="toolbtn" id="resetBtn">↻ Қайта ойнау</button></div>
+</header>
+<section class="scene-card" id="scene">
+  <div class="scene-head"><span class="pill">✦ &nbsp; Light &amp; Color Experiment</span><p>Discover how white light becomes a rainbow!</p></div>
+  <svg class="scene-svg" viewBox="0 0 1050 370" preserveAspectRatio="xMidYMid meet" aria-label="Күн сәулесі, шыны призма және түрлі түсті кемпірқосақ">
+    <defs>
+      <radialGradient id="sunGrad"><stop offset="0%" stop-color="#fffdf1"/><stop offset="70%" stop-color="#fff5c4"/><stop offset="100%" stop-color="#ffdcb0"/></radialGradient>
+      <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity=".80"/><stop offset="46%" stop-color="#d2f1ff" stop-opacity=".56"/><stop offset="100%" stop-color="#b4b8f2" stop-opacity=".53"/></linearGradient>
+      <linearGradient id="beamGrad"><stop offset="0" stop-color="#fffbeb" stop-opacity=".18"/><stop offset=".6" stop-color="#fffef3" stop-opacity=".96"/><stop offset="1" stop-color="#fffbeb" stop-opacity=".95"/></linearGradient>
+      <filter id="beamGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+    <g class="sun-halo"><circle cx="99" cy="150" r="76" fill="#fff2bf" opacity=".25"/><circle cx="99" cy="150" r="56" fill="#fff2bf" opacity=".32"/></g>
+    <circle cx="99" cy="150" r="38" fill="url(#sunGrad)" stroke="#fffdf8" stroke-width="3"/>
+    <g stroke="#fff7d6" stroke-width="4" stroke-linecap="round" opacity=".75">
+      <path d="M99 91v-17 M99 207v18 M41 150H24 M157 150h18 M56 106l-15-15 M142 194l15 15 M56 194l-15 15 M142 106l15-15"/>
+    </g>
+    <g id="whiteBeam">
+      <path d="M145 152 L422 211" stroke="#fff" stroke-width="14" filter="url(#beamGlow)" opacity=".8"/>
+      <path d="M145 152 L422 211" stroke="url(#beamGrad)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M150 145L420 207" stroke="#fff" stroke-width="1.5" opacity=".85"/>
+    </g>
+    <g id="prism" class="prism-group"><path d="M455 107 L374 279 L542 279 Z" fill="url(#glassGrad)" stroke="#f9ffff" stroke-width="6" stroke-linejoin="round"/><path d="M455 107L458 278L374 279Z" fill="#caefff" opacity=".22"/><path d="M455 107L458 278L542 279Z" fill="#b2cfff" opacity=".21"/><path d="M388 273 L455 128" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/><path d="M458 122L528 272" stroke="#edfaff" stroke-width="1.6" opacity=".66"/></g>
+    <g id="rainbowSvg" fill="none" stroke-width="11" stroke-linecap="round">
+      <path id="color0" class="spectrum-path" d="M574 314 C606 34 942 34 974 314" stroke="#ef7787"/>
+      <path id="color1" class="spectrum-path" d="M585 314 C618 56 931 56 963 314" stroke="#ffad66"/>
+      <path id="color2" class="spectrum-path" d="M596 314 C629 77 920 77 952 314" stroke="#f8d75e"/>
+      <path id="color3" class="spectrum-path" d="M607 314 C640 98 908 98 941 314" stroke="#7fcea7"/>
+      <path id="color4" class="spectrum-path" d="M618 314 C652 121 897 121 930 314" stroke="#79b8ed"/>
+      <path id="color5" class="spectrum-path" d="M629 314 C663 144 886 144 919 314" stroke="#8d99d9"/>
+      <path id="color6" class="spectrum-path" d="M640 314 C674 167 874 167 908 314" stroke="#bb8bd8"/>
+    </g>
+    <g opacity=".62" fill="#fff"><circle cx="546" cy="216" r="3"/><circle cx="563" cy="198" r="1.8"/><circle cx="342" cy="178" r="2"/></g>
+    <g font-size="18" font-weight="800" fill="#8293b5" font-family="Arial, sans-serif"><text x="385" y="310">prism</text><text x="162" y="138">white light</text></g>
+  </svg>
+  <div class="scene-hint" id="sceneHint">✨ Answer correctly to create light!</div>
+  <div id="finish"><div class="finish-inner"><div style="font-size:52px">🌈 ✨</div><h2>Beautiful Rainbow!</h2><p>You discovered the seven colours of light.<br>Wonderful English &amp; Physics!</p><button id="finishReset" class="nextbtn">↻ Play Again</button></div></div>
+</section>
+<div class="progress" aria-label="Ойынның үш кезеңі"><div class="step active" id="step0"><span class="n">1</span> Science Words</div><div class="step" id="step1"><span class="n">2</span> Translate</div><div class="step" id="step2"><span class="n">3</span> Build Rainbow</div></div>
+<section class="task-card" id="taskCard">
+  <div class="task-top"><span class="eyebrow" id="kicker">ROUND 1 · DISCOVER</span><span class="small-note" id="questionCount"></span></div>
+  <h2 id="prompt">Select the science words.</h2><p id="instruction">Әр дұрыс сөзді басқанда ағылшынша айтылуын тыңдаңыз.</p>
+  <div class="options" id="options"></div>
+  <div class="bottomline"><div class="feedback" id="feedback" aria-live="polite">☀️ Let's explore light!</div><button class="nextbtn hidden" id="nextBtn">Next →</button></div>
+  <div id="voiceStatus" role="status"></div>
+</section>
+</div>
+<div id="overlay"><div class="welcome"><div class="bigicon">🌈🔬</div><h2>Welcome to the Color Lab!</h2><p>Learn English through light and colours.<br><b>3 interactive rounds</b> · Spoken words · Soft background music.<br>Дыбысты қосу үшін ойынды бастаңыз.</p><button id="startBtn" class="nextbtn">▶ Start Experiment</button></div></div>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const correctWords=['light','prism','rainbow','refraction','spectrum','lightning'];
+const stage1Options=[...correctWords,'chair','sand','garden','pencil','banana','juice'];
+const stage2=[
+  {kk:'Жарықтың сынуы',en:'refraction',options:['refraction','reflection','vibration','rotation'],note:'Refraction means the bending of light.'},
+  {kk:'Ақ жарық',en:'white light',options:['white light','sound wave','electric field','shadow'],note:'White light contains many colours.'},
+  {kk:'Призма',en:'prism',options:['prism','mirror','magnet','lens'],note:'A prism can separate white light into colours.'},
+  {kk:'Спектр',en:'spectrum',options:['spectrum','temperature','pressure','frequency'],note:'A spectrum shows the colours of visible light.'}
+];
+const colors=[
+  {kk:'Қызыл',en:'red',options:['red','green','orange','blue']},
+  {kk:'Қызғылт сары',en:'orange',options:['orange','violet','yellow','pink']},
+  {kk:'Сары',en:'yellow',options:['yellow','blue','green','red']},
+  {kk:'Жасыл',en:'green',options:['green','indigo','orange','white']},
+  {kk:'Көк',en:'blue',options:['blue','yellow','violet','black']},
+  {kk:'Қою көк',en:'indigo',options:['indigo','violet','red','orange']},
+  {kk:'Күлгін',en:'violet',options:['violet','yellow','green','pink']}
+];
+let stage=0,index=0,found=new Set(),correctCount=0,finishedQuestion=false,started=false;
+let bgOn=true,speechOn=true,audio=null,musicGain=null,ambientLoop=null,activeVoice=null;
+const audioCtor=window.AudioContext||window.webkitAudioContext;
+function initAudio(){
+  if(!audioCtor)return;
+  try{if(!audio){audio=new audioCtor();musicGain=audio.createGain();musicGain.gain.value=0;musicGain.connect(audio.destination)}audio.resume().catch(()=>{});if(bgOn)startAmbient();}catch(e){}
+}
+function softNote(freq,start,duration,vol=.028,type='sine'){
+  if(!audio||!musicGain)return;
+  const osc=audio.createOscillator(),g=audio.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,start);osc.frequency.linearRampToValueAtTime(freq*1.006,start+duration);
+  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(vol,start+.15);g.gain.exponentialRampToValueAtTime(.0001,start+duration);
+  osc.connect(g).connect(musicGain);osc.start(start);osc.stop(start+duration+.025);
+}
+let chordAt=0;
+const chords=[[261.63,329.63,392],[220,329.63,440],[246.94,293.66,392],[196,293.66,392]];
+function playAmbientChord(){
+  if(!audio||!bgOn)return;
+  const t=audio.currentTime+.06, chord=chords[chordAt++%chords.length];
+  chord.forEach((n,i)=>softNote(n*(i===0?.5:1),t+i*.09,3.7,.020,'sine'));
+  softNote(chord[1]*2,t+1.55,1.5,.011,'triangle');
+}
+function startAmbient(){
+  if(!audio)return;
+  musicGain.gain.cancelScheduledValues(audio.currentTime);musicGain.gain.setTargetAtTime(.7,audio.currentTime,.15);
+  if(ambientLoop===null){playAmbientChord();ambientLoop=setInterval(playAmbientChord,3800);}
+}
+function stopAmbient(){
+  if(audio&&musicGain)musicGain.gain.setTargetAtTime(0,audio.currentTime,.1);
+  if(ambientLoop!==null){clearInterval(ambientLoop);ambientLoop=null;}
+}
+function speak(text){
+  if(!speechOn)return;
+  if(!('speechSynthesis' in window)){$('voiceStatus').textContent='Бұл браузерде мәтінді дыбыстау қолжетімсіз. Chrome немесе Edge пайдаланыңыз.';return;}
+  try{
+    const synth=window.speechSynthesis;
+    synth.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.83;u.pitch=1.05;u.volume=1;
+    const voices=synth.getVoices();
+    const eng=voices.filter(v=>/^en([_-]|$)/i.test(v.lang));
+    if(eng.length){u.voice=eng.find(v=>/en-US/i.test(v.lang)&&(/natural|google|aria|jenny|zira/i.test(v.name)))||eng.find(v=>/en-US/i.test(v.lang))||eng[0];}
+    u.onstart=()=>{if(audio&&musicGain)musicGain.gain.setTargetAtTime(.18,audio.currentTime,.06);};
+    u.onend=u.onerror=()=>{if(audio&&musicGain&&bgOn)musicGain.gain.setTargetAtTime(.7,audio.currentTime,.2);};
+    synth.speak(u);
+    $('voiceStatus').textContent='🔊 '+text;
+  }catch(e){$('voiceStatus').textContent='Сөзді дыбыстау мүмкін болмады.';}
+}
+function pulse(){
+  const scene=$('scene');scene.classList.remove('pulse');void scene.offsetWidth;scene.classList.add('pulse');
+}
+function tinyChime(){
+  if(!audio||!musicGain||!bgOn)return;
+  const t=audio.currentTime+.02;
+  softNote(784,t,.6,.027,'sine');softNote(1174.66,t+.10,.9,.020,'sine');
+}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function button(label,isCorrect){
+  const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=label;
+  b.addEventListener('click',()=>answer(b,label,isCorrect));return b;
+}
+function questionUI(prompt,hint,kicker,counter,answers,isCorrect){
+  $('prompt').textContent=prompt;$('instruction').textContent=hint;$('kicker').textContent=kicker;$('questionCount').textContent=counter;
+  const area=$('options');area.replaceChildren();shuffle(answers).forEach(ans=>area.appendChild(button(ans,isCorrect(ans))));
+  $('nextBtn').classList.add('hidden');$('feedback').textContent='✦ Choose the correct answer.';$('voiceStatus').textContent='';finishedQuestion=false;
+}
+function updateSteps(){for(let i=0;i<3;i++){$('step'+i).className='step'+(i===stage?' active':(i<stage?' done':''));}}
+function draw(){
+  updateSteps();$('finish').style.display='none';
+  if(stage===0){
+    questionUI('Catch the science words!','Жарыққа, кемпірқосаққа және табиғи электр құбылысына қатысты 6 ағылшын сөзін таңдаңыз. Әр дұрыс сөз дауыстап айтылады.','ROUND 1 · DISCOVER','',stage1Options,ans=>correctWords.includes(ans));
+    for(const name of found){const btn=[...$('options').children].find(b=>b.textContent===name);if(btn){btn.disabled=true;btn.classList.add('good');}}
+    $('feedback').textContent=found.size?'✓ '+found.size+' science words discovered!':'✦ Find the science words.';
+    if(found.size===correctWords.length){finishQuestion('Next: Translate →');}
+  }else if(stage===1){
+    const q=stage2[index];questionUI(`«${q.kk}» — ?`,'Қазақша терминнің дұрыс ағылшынша аудармасын табыңыз.','ROUND 2 · TRANSLATE',`${index+1} / ${stage2.length}`,q.options,ans=>ans===q.en);
+  }else{
+    const q=colors[index];questionUI(`Find the colour: «${q.kk}»`,'Дұрыс ағылшынша түсті таңдаңыз — кемпірқосақта сол түс пайда болып, аты дыбысталады.','ROUND 3 · BUILD THE RAINBOW',`${index+1} / ${colors.length}`,q.options,ans=>ans===q.en);
+    $('sceneHint').textContent='🌈 '+index+' / 7 colours discovered';
+  }
+}
+function finishQuestion(label){finishedQuestion=true;$('nextBtn').textContent=label;$('nextBtn').classList.remove('hidden');}
+function answer(b,label,correct){if(finishedQuestion||b.disabled)return;
+  if(!correct){b.classList.remove('bad');void b.offsetWidth;b.classList.add('bad');$('feedback').textContent='Try again! Басқа жауапты таңдаңыз.';return;}
+  b.disabled=true;b.classList.add('good');pulse();tinyChime();speak(label);
+  if(stage===0){
+    found.add(label);$('feedback').textContent=`✓ ${label} — Correct! (${found.size} / ${correctWords.length})`;
+    if(found.size===correctWords.length){finishQuestion('Next: Translate →');$('feedback').textContent='Wonderful! All six words discovered.';}
+  }else if(stage===1){$('feedback').textContent='✓ '+stage2[index].note;finishQuestion(index===stage2.length-1?'Next: Build the Rainbow →':'Next translation →');}
+  else{
+    $('color'+index).classList.add('revealed');
+    $('sceneHint').textContent='🌈 '+(index+1)+' / 7 colours discovered';
+    $('feedback').textContent='✓ '+label.toUpperCase()+' — Beautiful!';
+    finishQuestion(index===colors.length-1?'See my rainbow ✨':'Next colour →');
+  }
+}
+function goNext(){if(!finishedQuestion)return;
+  if(stage===0){stage=1;index=0;}
+  else if(stage===1){if(index<stage2.length-1)index++;else{stage=2;index=0;}}
+  else{if(index<colors.length-1)index++;else{showFinish();return;}}
+  draw();
+}
+function showFinish(){
+  $('finish').style.display='flex';$('taskCard').style.opacity='.64';$('sceneHint').textContent='🌈 Full rainbow completed';
+  speak('Rainbow! Wonderful!');
+}
+function restart(){
+  if(!started){start();return;}
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+  stage=0;index=0;found=new Set();$('taskCard').style.opacity='1';
+  for(let i=0;i<7;i++){$('color'+i).classList.remove('revealed');}
+  $('sceneHint').textContent='✨ Answer correctly to create light!';draw();
+}
+function start(){started=true;initAudio();$('overlay').classList.add('hidden');restart();}
+$('startBtn').addEventListener('click',start);
+$('resetBtn').addEventListener('click',restart);
+$('finishReset').addEventListener('click',restart);
+$('nextBtn').addEventListener('click',goNext);
+$('musicBtn').addEventListener('click',()=>{bgOn=!bgOn;initAudio();if(bgOn)startAmbient();else stopAmbient();$('musicBtn').textContent=bgOn?'♫ Әуен: қосулы':'♫ Әуен: өшірулі';});
+$('speechBtn').addEventListener('click',()=>{speechOn=!speechOn;if(!speechOn&&'speechSynthesis' in window)window.speechSynthesis.cancel();$('speechBtn').textContent=speechOn?'🔊 Дауыс: қосулы':'🔇 Дауыс: өшірулі';if(speechOn&&started)speak('Rainbow');});
+window.addEventListener('pagehide',()=>{stopAmbient();if('speechSynthesis' in window)window.speechSynthesis.cancel();});
+// Initial content visible behind the welcome window.
+draw();
+})();
+</script>
+</body>
+</html>

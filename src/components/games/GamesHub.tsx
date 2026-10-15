@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LuBrain, LuCloudLightning, LuEar, LuGuitar, LuPuzzle, LuRainbow, LuSnowflake, LuZap } from 'react-icons/lu';
+import { LuBrain, LuCloudLightning, LuEar, LuGuitar, LuPalette, LuPuzzle, LuRainbow, LuSnowflake, LuZap } from 'react-icons/lu';
 import SoundGame from './SoundGame';
 import MatchGame from './MatchGame';
 import QuizGame from './QuizGame';
@@ -8,10 +8,14 @@ import DombraGame from './DombraGame';
 import RainbowSim from './RainbowSim';
 import LightningSim from './LightningSim';
 import SnowSim from './SnowSim';
+import EnglishGame from './EnglishGame';
 import { MATCH_PAIRS, QUIZ, SOUND_ITEMS } from '../../lib/gamesData';
 import type { Subject } from '../../types';
 
-type GameId = 'weather' | 'rainbow' | 'lightning' | 'snow' | 'dombra' | 'sound' | 'match' | 'quiz';
+type GameId = 'weather' | 'rainbow' | 'lightning' | 'snow' | 'dombra' | 'sound' | 'match' | 'quiz' | 'en-snow' | 'en-lightning' | 'en-rainbow';
+
+// Ағылшын тілі ойындары: public/english/ ішіндегі HTML беттер
+const EN_FILES: Partial<Record<GameId, string>> = { 'en-snow': 'snowflakes.html', 'en-lightning': 'lightning.html', 'en-rainbow': 'rainbow.html' };
 
 const GAMES: { id: GameId; subject: Subject; title: string; text: string; meta: string; icon: typeof LuEar }[] = [
   { id: 'weather', subject: 'music', title: 'Ауа райы саяхаты', text: 'Анимациялық ойын: аспаннан түскен ноталарды ұстап, әуен құра, найзағайдан қаш!', meta: '3 кезең · 60 секунд', icon: LuCloudLightning },
@@ -21,6 +25,9 @@ const GAMES: { id: GameId; subject: Subject; title: string; text: string; meta: 
   { id: 'dombra', subject: 'music', title: 'Домбыра шерт', text: 'Екі шекті домбырада өзің ойна немесе жаттығуларды қадаммен үйрен.', meta: 'Еркін ойнау · 5 жаттығу', icon: LuGuitar },
   { id: 'sound', subject: 'music', title: 'Дыбысынан таны', text: 'Жаңбыр, найзағай, боран… Дыбысты тыңдап, қай құбылыс екенін тап.', meta: `${SOUND_ITEMS.length} дыбыс`, icon: LuEar },
   { id: 'match', subject: 'music', title: 'Сәйкестендір', text: 'Табиғат құбылысын оны суреттейтін музыкалық шығармамен жұпта.', meta: `${MATCH_PAIRS.length} жұп`, icon: LuPuzzle },
+  { id: 'en-snow', subject: 'english', title: 'Catch the Snowflakes', text: 'Қысқа қатысты дұрыс ағылшын сөздері жазылған қар ұлпаларын бас. Қате сөз орнында қалады!', meta: 'Winter words · 7 сөз', icon: LuSnowflake },
+  { id: 'en-lightning', subject: 'english', title: 'Lightning Challenge', text: 'Найзағай сөздерін тап, сөйлемді толықтыр және аудар. Дұрыс жауапта найзағай жарқылдайды!', meta: '3 кезең · Physics × English', icon: LuZap },
+  { id: 'en-rainbow', subject: 'english', title: 'Rainbow Color Lab', text: 'Ғылыми сөздерді тап, терминдерді аудар және түстерді атап, кемпірқосақ құрастыр. Сөздер дауыстап айтылады.', meta: '3 кезең · дауыспен', icon: LuPalette },
   { id: 'quiz', subject: 'physics', title: 'Құбылыс викторинасы', text: 'Найзағай, қар, кемпірқосақ және композиторлар туралы сұрақтар.', meta: `${QUIZ.length} сұрақ`, icon: LuBrain },
 ];
 
@@ -38,6 +45,11 @@ export default function GamesHub({ subject }: { subject: Subject }) {
   if (game === 'sound') return <SoundGame onBack={back} />;
   if (game === 'match') return <MatchGame onBack={back} />;
   if (game === 'quiz') return <QuizGame onBack={back} />;
+  const en = game && EN_FILES[game];
+  if (game && en) {
+    const g = GAMES.find((x) => x.id === game)!;
+    return <EnglishGame file={en} title={g.title} subtitle={g.meta} onBack={back} />;
+  }
 
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

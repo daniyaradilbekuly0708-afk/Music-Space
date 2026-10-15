@@ -177,7 +177,7 @@ export default function UploadModal({ open, initialType, initialSubject, demo, o
 
           <div>
             <span className="label">Бөлім</span>
-            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Бөлім">
+            <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Бөлім">
               {SUBJECTS.map(({ id, label, icon: Icon }) => {
                 const on = id === subject;
                 return (

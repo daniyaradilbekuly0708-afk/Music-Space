@@ -67,10 +67,14 @@ create table if not exists public.materials (
   )
 );
 
--- Сайттың бөлімі: музыка немесе физика (кейін қосылған баған)
+-- Сайттың бөлімі: музыка, физика немесе ағылшын тілі (кейін қосылған баған)
 alter table public.materials
   add column if not exists subject text not null default 'music'
-  check (subject in ('music', 'physics'));
+  check (subject in ('music', 'physics', 'english'));
+
+-- Баған бұрыннан болса, тексеруді жаңартамыз («Ағылшын тілі» қосылды)
+alter table public.materials drop constraint if exists materials_subject_check;
+alter table public.materials add constraint materials_subject_check check (subject in ('music', 'physics', 'english'));
 
 create index if not exists materials_created_at_idx on public.materials (created_at desc);
 create index if not exists materials_subject_idx on public.materials (subject);

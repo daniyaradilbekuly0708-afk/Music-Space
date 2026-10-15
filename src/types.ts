@@ -1,7 +1,7 @@
 export type MaterialType = 'audio' | 'video' | 'image';
 
 /** Сайттың екі бөлімі: музыка және физика. */
-export type Subject = 'music' | 'physics';
+export type Subject = 'music' | 'physics' | 'english';
 
 export interface Material {
   id: string;

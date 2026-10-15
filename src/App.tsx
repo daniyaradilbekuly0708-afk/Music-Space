@@ -43,14 +43,21 @@ const SECTION_TITLE: Record<Subject, Record<SectionId, { title: string; sub: str
     image: { title: 'Физика · Суреттер', sub: 'Құбылыстар, сызбалар мен формулалар' },
     games: { title: 'Тәжірибелер мен симуляциялар', sub: 'Параметрлерді өзгертіп, құбылысты өз көзіңмен бақыла' },
   },
+  english: {
+    audio: { title: 'Ағылшын тілі · Аудио', sub: 'Сөздердің айтылуы, диалогтар мен тыңдалым' },
+    video: { title: 'Ағылшын тілі · Видео', sub: 'Сабаққа арналған ағылшынша бейнелер' },
+    image: { title: 'Ағылшын тілі · Суреттер', sub: 'Сөздік карточкалар мен көрнекіліктер' },
+    games: { title: 'Ағылшын тілі ойындары', sub: 'Ауа райы, жарық пен түстер туралы сөздерді ойнап үйрен' },
+  },
 };
 
 const SUBJECT_KEY = 'fm-subject';
 function savedSubject(): Subject {
   try {
     const p = new URLSearchParams(window.location.search).get('s');
-    if (p === 'physics' || p === 'music') return p;
-    return localStorage.getItem(SUBJECT_KEY) === 'physics' ? 'physics' : 'music';
+    if (p === 'physics' || p === 'music' || p === 'english') return p;
+    const s = localStorage.getItem(SUBJECT_KEY);
+    return s === 'physics' || s === 'english' ? s : 'music';
   } catch {
     return 'music';
   }
@@ -167,7 +174,7 @@ export default function App() {
   }, [materials, teacher, subject]);
 
   const subjectCounts = useMemo(() => {
-    const c: Record<Subject, number> = { music: 0, physics: 0 };
+    const c: Record<Subject, number> = { music: 0, physics: 0, english: 0 };
     for (const m of materials) if (m.is_published || teacher) c[m.subject]++;
     return c;
   }, [materials, teacher]);
@@ -341,7 +348,7 @@ export default function App() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`${subject === 'music' ? 'Музыка' : 'Физика'} · ${tab === 'audio' ? 'аудио' : tab === 'video' ? 'видео' : 'суреттер'} ішінен іздеу…`}
+                placeholder={`${subject === 'music' ? 'Музыка' : subject === 'physics' ? 'Физика' : 'Ағылшын тілі'} · ${tab === 'audio' ? 'аудио' : tab === 'video' ? 'видео' : 'суреттер'} ішінен іздеу…`}
                 className="field !rounded-2xl !py-3 pr-10 pl-11"
                 aria-label="Іздеу"
               />

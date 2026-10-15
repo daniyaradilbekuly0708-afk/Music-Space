@@ -53,7 +53,7 @@ function toMaterial(r: DemoRecord): Material {
   return {
     id: r.id,
     type: r.type,
-    subject: r.subject === 'physics' ? 'physics' : 'music',
+    subject: r.subject === 'physics' || r.subject === 'english' ? r.subject : 'music',
     title: r.title,
     description: r.description,
     file_path: r.file_path,

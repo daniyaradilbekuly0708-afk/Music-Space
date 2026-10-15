@@ -11,7 +11,7 @@ export default function Hero({ counts }: { counts: { audio: number; video: numbe
       <div className="animate-fade-up text-center">
         <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-gold-400/25 bg-gold-400/[0.06] px-4 py-1.5 text-xs font-semibold tracking-wide text-gold-200">
           <span className="size-1.5 rounded-full bg-gold-400 shadow-[0_0_10px] shadow-gold-400" />
-          Физика мен музыка сабағына арналған медиа кеңістік
+          Физика, музыка және ағылшын тілі сабағына арналған медиа кеңістік
         </p>
         <h1 className="font-display text-4xl leading-[1.05] font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
           ФИЗИКА <span className="text-gold-gradient">+</span> МУЗЫКА

@@ -1,15 +1,16 @@
-import { LuAtom, LuMusic } from 'react-icons/lu';
+import { LuAtom, LuLanguages, LuMusic } from 'react-icons/lu';
 import type { Subject } from '../types';
 
 export const SUBJECTS: { id: Subject; label: string; text: string; icon: typeof LuMusic }[] = [
   { id: 'music', label: 'Музыка', text: 'Әуендер, аспаптар, композиторлар және музыкалық ойындар', icon: LuMusic },
   { id: 'physics', label: 'Физика', text: 'Табиғат құбылыстары, тәжірибелер және интерактивті симуляциялар', icon: LuAtom },
+  { id: 'english', label: 'Ағылшын тілі', text: 'Сөздер, аударма және ағылшын тіліндегі ойындар', icon: LuLanguages },
 ];
 
-/** «Музыка» / «Физика» бөлімдерін ауыстыратын үлкен батырмалар. */
+/** «Музыка» / «Физика» / «Ағылшын тілі» бөлімдерін ауыстыратын үлкен батырмалар. */
 export default function SubjectSwitch({ active, onChange, counts }: { active: Subject; onChange: (s: Subject) => void; counts: Record<Subject, number> }) {
   return (
-    <div role="tablist" aria-label="Пән бөлімдері" className="grid gap-3 sm:grid-cols-2">
+    <div role="tablist" aria-label="Пән бөлімдері" className="grid gap-3 sm:grid-cols-3">
       {SUBJECTS.map(({ id, label, text, icon: Icon }) => {
         const on = id === active;
         return (
