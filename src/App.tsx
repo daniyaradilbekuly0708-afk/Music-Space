@@ -417,7 +417,7 @@ export default function App() {
       <footer className="border-t border-white/[0.06] bg-ink-950/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-slate-500 sm:flex-row sm:px-6">
           <p>
-            © {new Date().getFullYear()} <span className="font-display font-semibold tracking-wider text-slate-300">ФИЗИКА + МУЗЫКА</span> — Дыбыс пен құбылыс әлемі
+            © {new Date().getFullYear()} <span className="font-display font-semibold tracking-wider text-slate-300">PHENOMENON LAB</span> — Физика + Музыка + English
           </p>
           <p className="inline-flex items-center gap-1.5">
             {demo ? <LuFlaskConical className="size-3.5" /> : <LuDatabase className="size-3.5" />}

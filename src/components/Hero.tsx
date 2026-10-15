@@ -14,11 +14,14 @@ export default function Hero({ counts }: { counts: { audio: number; video: numbe
           Физика, музыка және ағылшын тілі сабағына арналған медиа кеңістік
         </p>
         <h1 className="font-display text-4xl leading-[1.05] font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-          ФИЗИКА <span className="text-gold-gradient">+</span> МУЗЫКА
+          PHENOMENON <span className="text-gold-gradient">LAB</span>
         </h1>
-        <p className="mt-3 font-display text-lg font-medium text-plum-300 sm:text-2xl">Дыбыс пен құбылыс әлемі</p>
+        <p className="mt-4 font-display text-base font-bold tracking-[0.18em] text-white/90 sm:text-xl">
+          ФИЗИКА <span className="text-gold-300">+</span> МУЗЫКА <span className="text-gold-300">+</span> ENGLISH
+        </p>
+        <p className="mt-2 font-display text-lg font-medium text-plum-300 sm:text-2xl">Құбылыстар зертханасы</p>
         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-slate-300/85 sm:text-base">
-          Табиғат құбылыстарын бақылаңыз, дыбыстың физикасын тыңдаңыз, тәжірибелер мен ойындар арқылы үйреніңіз — барлығы бір жерде.
+          Табиғат құбылыстарын бақылаңыз, дыбыстың физикасын тыңдаңыз, ағылшын сөздерін ойнап үйреніңіз — барлығы бір жерде.
         </p>
         <div className="mt-6 flex items-center justify-center gap-6 sm:gap-10">
           {stats.map((s) => (

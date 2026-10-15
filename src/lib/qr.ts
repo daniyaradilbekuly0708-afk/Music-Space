@@ -60,7 +60,7 @@ function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number
 
 /**
  * Кітапқа басып шығаруға арналған QR сурет (PNG data URL):
- * жоғарыда ФИЗИКА + МУЗЫКА, ортасында QR, астында материал атауы.
+ * жоғарыда PHENOMENON LAB, ортасында QR, астында материал атауы.
  */
 export async function printableQr(m: Pick<Material, 'id' | 'title' | 'type'>): Promise<string> {
   const W = 900;
@@ -83,10 +83,10 @@ export async function printableQr(m: Pick<Material, 'id' | 'title' | 'type'>): P
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = '#0b1b3f';
   ctx.font = '800 46px Unbounded, Manrope, system-ui, sans-serif';
-  ctx.fillText('ФИЗИКА + МУЗЫКА', W / 2, 78);
+  ctx.fillText('PHENOMENON LAB', W / 2, 78);
   ctx.fillStyle = '#1679ad';
   ctx.font = '600 24px Manrope, system-ui, sans-serif';
-  ctx.fillText('Дыбыс пен құбылыс әлемі', W / 2, 112);
+  ctx.fillText('Физика + Музыка + English', W / 2, 112);
 
   const qrCanvas = document.createElement('canvas');
   await QRCode.toCanvas(qrCanvas, materialLink(m), {
