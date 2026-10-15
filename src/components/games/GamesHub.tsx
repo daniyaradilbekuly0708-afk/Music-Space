@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import { LuBrain, LuCloudLightning, LuEar, LuGuitar, LuPuzzle, LuRainbow } from 'react-icons/lu';
+import { LuBrain, LuCloudLightning, LuEar, LuGuitar, LuPuzzle, LuRainbow, LuSnowflake, LuZap } from 'react-icons/lu';
 import SoundGame from './SoundGame';
 import MatchGame from './MatchGame';
 import QuizGame from './QuizGame';
 import WeatherGame from './WeatherGame';
 import DombraGame from './DombraGame';
 import RainbowSim from './RainbowSim';
+import LightningSim from './LightningSim';
+import SnowSim from './SnowSim';
 import { MATCH_PAIRS, QUIZ, SOUND_ITEMS } from '../../lib/gamesData';
 
-type GameId = 'weather' | 'rainbow' | 'dombra' | 'sound' | 'match' | 'quiz';
+type GameId = 'weather' | 'rainbow' | 'lightning' | 'snow' | 'dombra' | 'sound' | 'match' | 'quiz';
 
 const GAMES: { id: GameId; title: string; text: string; meta: string; icon: typeof LuEar }[] = [
   { id: 'weather', title: 'Ауа райы саяхаты', text: 'Анимациялық ойын: аспаннан түскен ноталарды ұстап, әуен құра, найзағайдан қаш!', meta: '3 кезең · 60 секунд', icon: LuCloudLightning },
   { id: 'rainbow', title: 'Кемпірқосақ симуляциясы', text: 'Интерактивті модель: күннің биіктігін, тамшыны және жаңбырды өзгертіп, кемпірқосақтың пайда болуын бақыла.', meta: 'Физика · сыну, шағылу, дисперсия', icon: LuRainbow },
+  { id: 'lightning', title: 'Найзағай симуляциясы', text: 'Бұлттағы зарядтарды бөліп, найзағайды іске қос және күн күркіреуінің қанша секундта жететінін есепте.', meta: 'Физика · заряд, разряд, дыбыс жылдамдығы', icon: LuZap },
+  { id: 'snow', title: 'Қар ұшқыны симуляциясы', text: 'Температура, жел және ылғалдылықты өзгертіп, су буының мұз кристалына айналуын бақыла.', meta: 'Физика · десублимация, ауырлық күші', icon: LuSnowflake },
   { id: 'dombra', title: 'Домбыра шерт', text: 'Екі шекті домбырада өзің ойна немесе жаттығуларды қадаммен үйрен.', meta: 'Еркін ойнау · 5 жаттығу', icon: LuGuitar },
   { id: 'sound', title: 'Дыбысынан таны', text: 'Жаңбыр, найзағай, боран… Дыбысты тыңдап, қай құбылыс екенін тап.', meta: `${SOUND_ITEMS.length} дыбыс`, icon: LuEar },
   { id: 'match', title: 'Сәйкестендір', text: 'Табиғат құбылысын оны суреттейтін музыкалық шығармамен жұпта.', meta: `${MATCH_PAIRS.length} жұп`, icon: LuPuzzle },
@@ -25,6 +29,8 @@ export default function GamesHub() {
 
   if (game === 'weather') return <WeatherGame onBack={back} />;
   if (game === 'rainbow') return <RainbowSim onBack={back} />;
+  if (game === 'lightning') return <LightningSim onBack={back} />;
+  if (game === 'snow') return <SnowSim onBack={back} />;
   if (game === 'dombra') return <DombraGame onBack={back} />;
   if (game === 'sound') return <SoundGame onBack={back} />;
   if (game === 'match') return <MatchGame onBack={back} />;
