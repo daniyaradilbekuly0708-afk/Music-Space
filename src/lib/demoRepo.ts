@@ -14,7 +14,8 @@ const DB_NAME = 'music-space-demo';
 const STORE = 'materials';
 const SESSION_KEY = 'music-space-demo-session';
 
-type DemoRecord = Omit<Material, 'file_url' | 'cover_url'> & { blob: Blob; coverBlob: Blob | null };
+// subject — кейін қосылған өріс, ескі жазбаларда болмауы мүмкін (онда «музыка» деп есептейміз).
+type DemoRecord = Omit<Material, 'file_url' | 'cover_url' | 'subject'> & { subject?: Material['subject']; blob: Blob; coverBlob: Blob | null };
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -52,6 +53,7 @@ function toMaterial(r: DemoRecord): Material {
   return {
     id: r.id,
     type: r.type,
+    subject: r.subject === 'physics' ? 'physics' : 'music',
     title: r.title,
     description: r.description,
     file_path: r.file_path,
@@ -104,6 +106,7 @@ export function createDemoRepo(): Repo {
       const record: DemoRecord = {
         id,
         type: input.type,
+        subject: input.subject,
         title: input.title.trim(),
         description: input.description.trim(),
         file_path: `${id}.${ext}`,
@@ -133,6 +136,7 @@ export function createDemoRepo(): Repo {
         ...(patch.title !== undefined && { title: patch.title.trim() }),
         ...(patch.description !== undefined && { description: patch.description.trim() }),
         ...(patch.is_published !== undefined && { is_published: patch.is_published }),
+        ...(patch.subject !== undefined && { subject: patch.subject }),
       };
       await tx('readwrite', (s) => s.put(next));
       return toMaterial(next);

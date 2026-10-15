@@ -1,8 +1,12 @@
 export type MaterialType = 'audio' | 'video' | 'image';
 
+/** Сайттың екі бөлімі: музыка және физика. */
+export type Subject = 'music' | 'physics';
+
 export interface Material {
   id: string;
   type: MaterialType;
+  subject: Subject;
   title: string;
   description: string;
   file_path: string;
@@ -17,6 +21,7 @@ export interface Material {
 
 export interface NewMaterialInput {
   type: MaterialType;
+  subject: Subject;
   title: string;
   description: string;
   file: File;
@@ -28,6 +33,7 @@ export interface MaterialPatch {
   title?: string;
   description?: string;
   is_published?: boolean;
+  subject?: Subject;
 }
 
 export interface AppUser {

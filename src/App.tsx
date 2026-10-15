@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { LuDatabase, LuFlaskConical, LuLayoutDashboard, LuQrCode, LuRefreshCw, LuSearch, LuX } from 'react-icons/lu';
-import type { AppUser, Material, MaterialPatch, MaterialType, NewMaterialInput, Repo } from './types';
+import type { AppUser, Material, MaterialPatch, MaterialType, NewMaterialInput, Repo, Subject } from './types';
 import { getRepo } from './lib/repo';
 import { DEMO_LOGIN } from './lib/demoRepo';
 import { captureVideoFrame } from './lib/media';
@@ -8,6 +8,7 @@ import Background from './components/Background';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Tabs from './components/Tabs';
+import SubjectSwitch from './components/SubjectSwitch';
 import AudioCard from './components/AudioCard';
 import VideoCard from './components/VideoCard';
 import ImageCard from './components/ImageCard';
@@ -29,12 +30,31 @@ import type { MaterialActions } from './components/CardActions';
 
 type StatusFilter = 'all' | 'published' | 'draft';
 
-const SECTION_TITLE: Record<SectionId, { title: string; sub: string }> = {
-  games: { title: 'Ойындар мен тәжірибелер', sub: 'Физика, табиғат құбылыстары және музыка — ойнап үйрен' },
-  audio: { title: 'Аудио', sub: 'Әуендерді сайттың ішінде тыңдаңыз' },
-  video: { title: 'Видео', sub: 'Бейнежазбаларды толық экранда көріңіз' },
-  image: { title: 'Суреттер', sub: 'Құбылыстар мен аспаптар галереясы' },
+const SECTION_TITLE: Record<Subject, Record<SectionId, { title: string; sub: string }>> = {
+  music: {
+    audio: { title: 'Музыка · Аудио', sub: 'Әуендер мен күйлерді сайттың ішінде тыңдаңыз' },
+    video: { title: 'Музыка · Видео', sub: 'Орындаулар мен музыкалық бейнелер' },
+    image: { title: 'Музыка · Суреттер', sub: 'Аспаптар, композиторлар және ноталар галереясы' },
+    games: { title: 'Музыкалық ойындар', sub: 'Тыңда, ойна, үйрен: домбыра, дыбыстар және әуендер' },
+  },
+  physics: {
+    audio: { title: 'Физика · Аудио', sub: 'Табиғат құбылыстарының дыбыстары мен түсіндірмелер' },
+    video: { title: 'Физика · Видео', sub: 'Тәжірибелер мен құбылыстар туралы бейнелер' },
+    image: { title: 'Физика · Суреттер', sub: 'Құбылыстар, сызбалар мен формулалар' },
+    games: { title: 'Тәжірибелер мен симуляциялар', sub: 'Параметрлерді өзгертіп, құбылысты өз көзіңмен бақыла' },
+  },
 };
+
+const SUBJECT_KEY = 'fm-subject';
+function savedSubject(): Subject {
+  try {
+    const p = new URLSearchParams(window.location.search).get('s');
+    if (p === 'physics' || p === 'music') return p;
+    return localStorage.getItem(SUBJECT_KEY) === 'physics' ? 'physics' : 'music';
+  } catch {
+    return 'music';
+  }
+}
 
 export default function App() {
   const [repo, setRepo] = useState<Repo | null>(null);
@@ -44,7 +64,17 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  const [subject, setSubjectState] = useState<Subject>(savedSubject);
   const [tab, setTab] = useState<SectionId>('audio');
+  const setSubject = useCallback((s: Subject) => {
+    setSubjectState(s);
+    setQuery('');
+    try {
+      localStorage.setItem(SUBJECT_KEY, s);
+    } catch {
+      /* сақтау міндетті емес */
+    }
+  }, []);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
 
@@ -110,14 +140,15 @@ export default function App() {
       toast('error', 'Бұл QR кодтағы материал табылмады немесе әзірге жарияланбаған.');
       return;
     }
+    setSubject(m.subject);
     setTab(m.type);
     if (m.type === 'audio') setSpotlight(m);
     else if (m.type === 'video') setPlayingVideo(m);
     else {
-      const images = materials.filter((x) => x.type === 'image' && (teacher || x.is_published)).sort((a, b) => b.created_at.localeCompare(a.created_at));
+      const images = materials.filter((x) => x.type === 'image' && x.subject === m.subject && (teacher || x.is_published)).sort((a, b) => b.created_at.localeCompare(a.created_at));
       setLightboxIndex(Math.max(0, images.findIndex((x) => x.id === m.id)));
     }
-  }, [loading, materials, teacher, toast]);
+  }, [loading, materials, teacher, toast, setSubject]);
 
   const closeSpotlight = useCallback(() => {
     setSpotlight(null);
@@ -131,7 +162,13 @@ export default function App() {
 
   const counts = useMemo(() => {
     const c: Record<MaterialType, number> = { audio: 0, video: 0, image: 0 };
-    for (const m of materials) if (m.is_published || teacher) c[m.type]++;
+    for (const m of materials) if ((m.is_published || teacher) && m.subject === subject) c[m.type]++;
+    return c;
+  }, [materials, teacher, subject]);
+
+  const subjectCounts = useMemo(() => {
+    const c: Record<Subject, number> = { music: 0, physics: 0 };
+    for (const m of materials) if (m.is_published || teacher) c[m.subject]++;
     return c;
   }, [materials, teacher]);
 
@@ -144,12 +181,12 @@ export default function App() {
   const visible = useMemo(() => {
     const q = query.trim().toLocaleLowerCase('kk');
     return materials
-      .filter((m) => m.type === tab)
+      .filter((m) => m.type === tab && m.subject === subject)
       .filter((m) => (teacher ? true : m.is_published))
       .filter((m) => (status === 'all' ? true : status === 'published' ? m.is_published : !m.is_published))
       .filter((m) => !q || m.title.toLocaleLowerCase('kk').includes(q) || m.description.toLocaleLowerCase('kk').includes(q))
       .sort((a, b) => b.created_at.localeCompare(a.created_at));
-  }, [materials, tab, query, status, teacher]);
+  }, [materials, tab, subject, query, status, teacher]);
 
   const stats = useMemo(() => {
     const total = materials.length;
@@ -165,6 +202,7 @@ export default function App() {
     if (input.type === 'video' && !cover) cover = await captureVideoFrame(input.file);
     const created = await repo.create({ ...input, cover }, onProgress);
     setMaterials((list) => [created, ...list.filter((m) => m.id !== created.id)]);
+    setSubject(created.subject);
     setTab(created.type);
     setQuery('');
     toast('success', created.is_published ? 'Материал сәтті жүктелді және жарияланды!' : 'Материал жоба ретінде сақталды.');
@@ -225,7 +263,7 @@ export default function App() {
 
   const imageItems = tab === 'image' ? visible : [];
   const demo = repo?.mode === 'demo';
-  const section = SECTION_TITLE[tab];
+  const section = SECTION_TITLE[subject][tab];
 
   return (
     <div className="relative flex min-h-dvh flex-col">
@@ -283,8 +321,13 @@ export default function App() {
             </div>
           )}
 
+          <div className="mb-6">
+            <SubjectSwitch active={subject} onChange={setSubject} counts={subjectCounts} />
+          </div>
+
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <Tabs
+              subject={subject}
               active={tab}
               onChange={(t) => {
                 setTab(t);
@@ -298,7 +341,7 @@ export default function App() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`${section.title} ішінен іздеу…`}
+                placeholder={`${subject === 'music' ? 'Музыка' : 'Физика'} · ${tab === 'audio' ? 'аудио' : tab === 'video' ? 'видео' : 'суреттер'} ішінен іздеу…`}
                 className="field !rounded-2xl !py-3 pr-10 pl-11"
                 aria-label="Іздеу"
               />
@@ -323,7 +366,7 @@ export default function App() {
           </div>
 
           {tab === 'games' ? (
-            <GamesHub />
+            <GamesHub subject={subject} />
           ) : loading ? (
             <div className={tab === 'image' ? 'columns-1 gap-4 sm:columns-2 sm:gap-5 lg:columns-3' : 'grid gap-5 sm:grid-cols-2 lg:grid-cols-3'}>
               {Array.from({ length: 6 }).map((_, i) => (
@@ -376,7 +419,7 @@ export default function App() {
         </div>
       </footer>
 
-      <UploadModal open={uploadOpen} initialType={tab === 'games' ? 'audio' : tab} demo={demo} onClose={() => setUploadOpen(false)} onUpload={handleUpload} />
+      <UploadModal open={uploadOpen} initialType={tab === 'games' ? 'audio' : tab} initialSubject={subject} demo={demo} onClose={() => setUploadOpen(false)} onUpload={handleUpload} />
       <EditModal material={editing} onClose={() => setEditing(null)} onSave={handleSave} />
       <ConfirmDialog material={deleting} onClose={() => setDeleting(null)} onConfirm={handleDelete} />
       <LoginModal open={loginOpen} demo={demo} demoLogin={demo ? DEMO_LOGIN : null} onClose={() => setLoginOpen(false)} onLogin={handleLogin} />

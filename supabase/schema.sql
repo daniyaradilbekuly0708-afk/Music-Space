@@ -67,7 +67,13 @@ create table if not exists public.materials (
   )
 );
 
+-- Сайттың бөлімі: музыка немесе физика (кейін қосылған баған)
+alter table public.materials
+  add column if not exists subject text not null default 'music'
+  check (subject in ('music', 'physics'));
+
 create index if not exists materials_created_at_idx on public.materials (created_at desc);
+create index if not exists materials_subject_idx on public.materials (subject);
 create index if not exists materials_type_idx on public.materials (type);
 
 alter table public.materials enable row level security;

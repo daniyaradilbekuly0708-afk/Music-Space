@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react';
 import { LuCircleAlert, LuCircleCheck, LuCloudUpload, LuHeadphones, LuImage, LuImages, LuMonitorPlay, LuX } from 'react-icons/lu';
 import Modal from './Modal';
-import type { MaterialType, NewMaterialInput } from '../types';
+import type { MaterialType, NewMaterialInput, Subject } from '../types';
+import { SUBJECTS } from './SubjectSwitch';
 import { DESCRIPTION_MAX, TITLE_MAX, TYPE_CONFIG, detectType, formatBytes, validateFile } from '../lib/config';
 
 interface Props {
   open: boolean;
   initialType: MaterialType;
+  initialSubject: Subject;
   demo: boolean;
   onClose: () => void;
   onUpload: (input: NewMaterialInput, onProgress: (f: number) => void) => Promise<void>;
@@ -20,8 +22,9 @@ const TYPES: { id: MaterialType; label: string; icon: typeof LuHeadphones }[] = 
 
 type Phase = 'form' | 'uploading' | 'done';
 
-export default function UploadModal({ open, initialType, demo, onClose, onUpload }: Props) {
+export default function UploadModal({ open, initialType, initialSubject, demo, onClose, onUpload }: Props) {
   const [type, setType] = useState<MaterialType>(initialType);
+  const [subject, setSubject] = useState<Subject>(initialSubject);
   const [file, setFile] = useState<File | null>(null);
   const [cover, setCover] = useState<File | null>(null);
   const [title, setTitle] = useState('');
@@ -50,7 +53,10 @@ export default function UploadModal({ open, initialType, demo, onClose, onUpload
 
   // Тек терезе ашылған сәтте тазалаймыз (жүктелгеннен кейін бөлім ауысса да, нәтиже экраны сақталады).
   useEffect(() => {
-    if (open) reset(initialType);
+    if (open) {
+      reset(initialType);
+      setSubject(initialSubject);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -121,7 +127,7 @@ export default function UploadModal({ open, initialType, demo, onClose, onUpload
     setPhase('uploading');
     setProgress(0);
     try {
-      await onUpload({ type, title: title.trim(), description: description.trim(), file, cover, is_published: publish }, setProgress);
+      await onUpload({ type, subject, title: title.trim(), description: description.trim(), file, cover, is_published: publish }, setProgress);
       setProgress(1);
       setPhase('done');
     } catch (err) {
@@ -168,6 +174,31 @@ export default function UploadModal({ open, initialType, demo, onClose, onUpload
               </span>
             </div>
           )}
+
+          <div>
+            <span className="label">Бөлім</span>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Бөлім">
+              {SUBJECTS.map(({ id, label, icon: Icon }) => {
+                const on = id === subject;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    disabled={uploading}
+                    onClick={() => setSubject(id)}
+                    className={`flex items-center justify-center gap-2 rounded-2xl border px-2 py-2.5 text-sm font-bold transition ${
+                      on ? 'border-gold-400/60 bg-gold-400/10 text-gold-200' : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20'
+                    }`}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div>
             <span className="label">Материал түрі</span>

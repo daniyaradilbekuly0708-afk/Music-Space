@@ -1,5 +1,5 @@
-import { LuGamepad2, LuHeadphones, LuImages, LuMonitorPlay } from 'react-icons/lu';
-import type { MaterialType } from '../types';
+import { LuFlaskConical, LuGamepad2, LuHeadphones, LuImages, LuMonitorPlay } from 'react-icons/lu';
+import type { MaterialType, Subject } from '../types';
 
 export type SectionId = MaterialType | 'games';
 
@@ -10,10 +10,11 @@ const TABS: { id: SectionId; label: string; icon: typeof LuHeadphones }[] = [
   { id: 'games', label: 'Ойындар', icon: LuGamepad2 },
 ];
 
-export default function Tabs({ active, onChange, counts }: { active: SectionId; onChange: (t: SectionId) => void; counts: Record<MaterialType, number> }) {
+export default function Tabs({ active, onChange, counts, subject }: { active: SectionId; onChange: (t: SectionId) => void; counts: Record<MaterialType, number>; subject: Subject }) {
+  const tabs = TABS.map((t) => (t.id === 'games' && subject === 'physics' ? { ...t, label: 'Тәжірибелер', icon: LuFlaskConical } : t));
   return (
     <div role="tablist" aria-label="Бөлімдер" className="glass grid w-full grid-cols-2 gap-1 min-[520px]:grid-cols-4 rounded-2xl p-1.5 sm:inline-grid sm:w-auto">
-      {TABS.map(({ id, label, icon: Icon }) => {
+      {tabs.map(({ id, label, icon: Icon }) => {
         const on = id === active;
         return (
           <button

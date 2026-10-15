@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { Material, MaterialPatch, MaterialType, NewMaterialInput, Repo } from '../types';
+import type { Material, MaterialPatch, MaterialType, NewMaterialInput, Repo, Subject } from '../types';
 import { TYPE_CONFIG, fileExt } from './config';
 
 /**
@@ -11,6 +11,8 @@ import { TYPE_CONFIG, fileExt } from './config';
 interface MaterialRow {
   id: string;
   type: MaterialType;
+  /** Дерекқор жаңартылмаған болса, бұл баған болмауы мүмкін. */
+  subject?: Subject | null;
   title: string;
   description: string | null;
   file_path: string;
@@ -38,6 +40,7 @@ export function createSupabaseRepo(url: string, anonKey: string): Repo {
   const toMaterial = (r: MaterialRow): Material => ({
     id: r.id,
     type: r.type,
+    subject: r.subject === 'physics' ? 'physics' : 'music',
     title: r.title,
     description: r.description ?? '',
     file_path: r.file_path,
@@ -91,7 +94,7 @@ export function createSupabaseRepo(url: string, anonKey: string): Repo {
     async list() {
       const { data, error } = await sb
         .from('materials')
-        .select('id,type,title,description,file_path,cover_path,mime_type,size_bytes,is_published,created_at')
+        .select('*')
         .order('created_at', { ascending: false });
       if (error) throw new Error(dbErrorMessage(error.message));
       return (data as MaterialRow[]).map(toMaterial);
@@ -121,6 +124,7 @@ export function createSupabaseRepo(url: string, anonKey: string): Repo {
           .insert({
             id,
             type: input.type,
+            subject: input.subject,
             title: input.title.trim(),
             description: input.description.trim(),
             file_path: filePath,
@@ -227,6 +231,9 @@ function storageErrorMessage(status: number, body: string): string {
 }
 
 function dbErrorMessage(raw: string): string {
+  if (/subject/i.test(raw) && /column|schema cache/i.test(raw)) {
+    return 'Дерекқорда «бөлім» (subject) бағаны әлі жоқ. Supabase → SQL Editor-де supabase/add_subject.sql файлын бір рет іске қосыңыз.';
+  }
   if (/row-level security/i.test(raw)) return 'Рұқсат жоқ: бұл әрекетті тек мұғалім орындай алады.';
   if (/relation .*materials.* does not exist|could not find the table/i.test(raw)) {
     return 'Дерекқор кестесі табылмады. supabase/schema.sql файлын іске қосыңыз.';

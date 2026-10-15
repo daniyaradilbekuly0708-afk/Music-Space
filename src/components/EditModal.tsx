@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { LuCircleAlert } from 'react-icons/lu';
 import Modal from './Modal';
-import type { Material, MaterialPatch } from '../types';
+import type { Material, MaterialPatch, Subject } from '../types';
+import { SUBJECTS } from './SubjectSwitch';
 import { DESCRIPTION_MAX, TITLE_MAX } from '../lib/config';
 
 interface Props {
@@ -14,6 +15,7 @@ export default function EditModal({ material, onClose, onSave }: Props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [published, setPublished] = useState(true);
+  const [subject, setSubject] = useState<Subject>('music');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +24,7 @@ export default function EditModal({ material, onClose, onSave }: Props) {
       setTitle(material.title);
       setDescription(material.description);
       setPublished(material.is_published);
+      setSubject(material.subject);
       setError(null);
       setSaving(false);
     }
@@ -34,7 +37,7 @@ export default function EditModal({ material, onClose, onSave }: Props) {
     setSaving(true);
     setError(null);
     try {
-      await onSave(material.id, { title, description, is_published: published });
+      await onSave(material.id, { title, description, is_published: published, ...(subject !== material.subject && { subject }) });
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Сақтау мүмкін болмады.');
@@ -45,6 +48,31 @@ export default function EditModal({ material, onClose, onSave }: Props) {
   return (
     <Modal open={Boolean(material)} onClose={onClose} title="Материалды өңдеу" closable={!saving}>
       <form onSubmit={submit} className="space-y-5" noValidate>
+        <div>
+            <span className="label">Бөлім</span>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Бөлім">
+              {SUBJECTS.map(({ id, label, icon: Icon }) => {
+                const on = id === subject;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    disabled={saving}
+                    onClick={() => setSubject(id)}
+                    className={`flex items-center justify-center gap-2 rounded-2xl border px-2 py-2.5 text-sm font-bold transition ${
+                      on ? 'border-gold-400/60 bg-gold-400/10 text-gold-200' : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20'
+                    }`}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
         <div>
           <label className="label" htmlFor="ed-title">
             Атауы
